@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Static stock culture workflow mockup for a microbiology LIS." />
+  <title>Stock Culture · Microbiology LIS</title>
+  <link rel="stylesheet" href="Main_Page.css" />
+  <link rel="stylesheet" href="shell-overrides.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand-lockup">
+        <div class="brand-mark" aria-hidden="true">MC</div>
+        <div>
+          <div class="brand-title">Microbiology</div>
+          <div class="brand-subtitle">Laboratory information system</div>
+        </div>
+      </div>
+
+      <div class="workspace-picker">
+        <span class="eyebrow">Current workspace</span>
+        <strong>Quality control</strong>
+        <span class="workspace-status"><span class="status-dot"></span> Live mockup data</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <span class="nav-label">Module</span>
+        <button class="nav-item is-active" type="button" data-view="dashboard">
+          <span class="nav-icon" aria-hidden="true">▦</span>
+          <span>QC organisms</span>
+          <span class="nav-count">12</span>
+        </button>
+        <button class="nav-item" type="button" data-view="storage">
+          <span class="nav-icon" aria-hidden="true">▣</span>
+          <span>Storage map</span>
+        </button>
+        <button class="nav-item" type="button" data-view="passages">
+          <span class="nav-icon" aria-hidden="true">↗</span>
+          <span>Passage log</span>
+        </button>
+        <button class="nav-item" type="button" data-view="subculture">
+          <span class="nav-icon" aria-hidden="true">＋</span>
+          <span>Subculture</span>
+        </button>
+        <button class="nav-item" type="button" data-view="usage">
+          <span class="nav-icon" aria-hidden="true">⇄</span>
+          <span>Usage &amp; disposal</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="safety-callout">
+          <span class="safety-icon" aria-hidden="true">!</span>
+          <div>
+            <strong>Traceability first</strong>
+            <span>Every movement keeps a passage and storage history.</span>
+          </div>
+        </div>
+        <div class="signed-in">
+          <div class="avatar">SA</div>
+          <div>
+            <strong>Sarah A.</strong>
+            <span>Microbiology scientist</span>
+          </div>
+          <button class="icon-button" type="button" aria-label="Account menu">•••</button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumbs"><span>Microbiology</span><span class="crumb-separator">/</span><strong id="breadcrumb-current">QC organisms</strong></div>
+        <div class="topbar-actions">
+          <span class="environment-pill"><span class="status-dot"></span> Local mockup</span>
+          <button class="icon-button" type="button" aria-label="Help">?</button>
+          <button class="notification-button" type="button" aria-label="Notifications"><span>♢</span><i></i></button>
+        </div>
+      </header>
+
+      <div class="page-container">
+        <section class="view is-visible" id="view-dashboard" data-view-panel="dashboard">
+          <div class="page-heading">
+            <div>
+              <span class="eyebrow accent-eyebrow">Stock culture control</span>
+              <h1>QC organisms</h1>
+              <p>Receive, verify, store and maintain reference organisms with complete traceability.</p>
+            </div>
+            <button class="button button-primary" type="button" data-view="register"><span class="button-symbol">＋</span> Add new QC organism</button>
+          </div>
+
+          <div class="metric-grid" aria-label="QC organism summary">
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Active cultures</span><span class="metric-icon metric-icon-blue">●</span></div>
+              <strong class="metric-value">12</strong>
+              <span class="metric-note"><span class="trend-up">↗ 2</span> this quarter</span>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Awaiting acceptance</span><span class="metric-icon metric-icon-amber">!</span></div>
+              <strong class="metric-value">2</strong>
+              <span class="metric-note">Both received this week</span>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Review due</span><span class="metric-icon metric-icon-purple">◷</span></div>
+              <strong class="metric-value">3</strong>
+              <span class="metric-note">Within the next 30 days</span>
+            </article>
+            <article class="metric-card">
+              <div class="metric-top"><span class="metric-label">Storage alerts</span><span class="metric-icon metric-icon-red">⌁</span></div>
+              <strong class="metric-value">1</strong>
+              <span class="metric-note">Freezer 02 needs review</span>
+            </article>
+          </div>
+
+          <div class="card workflow-card">
+            <div class="card-heading compact-heading">
+              <div>
+                <span class="eyebrow">Suggested operating flow</span>
+                <h2>From receipt to controlled use</h2>
+              </div>
+              <button class="text-button" type="button" data-view="register">Open registration <span>→</span></button>
+            </div>
+            <div class="flow-track">
+              <div class="flow-step is-complete"><span class="flow-index">01</span><div><strong>Receive</strong><span>Check shipment &amp; certificate</span></div></div>
+              <span class="flow-line is-complete"></span>
+              <div class="flow-step is-current"><span class="flow-index">02</span><div><strong>Accept</strong><span>Identity, purity &amp; result</span></div></div>
+              <span class="flow-line"></span>
+              <div class="flow-step"><span class="flow-index">03</span><div><strong>Store</strong><span>Assign freezer, rack &amp; box</span></div></div>
+              <span class="flow-line"></span>
+              <div class="flow-step"><span class="flow-index">04</span><div><strong>Maintain</strong><span>Passage, use &amp; disposal</span></div></div>
+            </div>
+          </div>
+
+          <section class="card table-card">
+            <div class="table-card-heading">
+              <div>
+                <div class="heading-with-count"><h2>QC organism register</h2><span class="count-badge">12 records</span></div>
+                <p>Use the action menu to open the related page for each organism.</p>
+              </div>
+              <div class="heading-actions">
+                <button class="button button-secondary" type="button" id="export-button"><span class="button-symbol">↓</span> Export view</button>
+                <button class="button button-ghost" type="button" id="clear-filters">Clear filters</button>
+              </div>
+            </div>
+
+            <div class="filter-bar">
+              <label class="search-field"><span class="search-icon" aria-hidden="true">⌕</span><input id="global-search" type="search" placeholder="Search organism, code or batch" autocomplete="off" /></label>
+              <label class="filter-field"><span>Status</span><select id="status-filter"><option value="all">All status</option><option value="Active">Active</option><option value="Pending acceptance">Pending acceptance</option><option value="Review due">Review due</option></select></label>
+              <label class="filter-field"><span>Storage</span><select id="storage-filter"><option value="all">All locations</option><option value="Freezer 01">Freezer 01</option><option value="Freezer 02">Freezer 02</option><option value="Refrigerator 01">Refrigerator 01</option></select></label>
+              <button class="filter-button" type="button" id="apply-filters">Filter <span>⌄</span></button>
+            </div>
+
+            <div class="table-wrap">
+              <table class="data-table" id="organism-table">
+                <thead>
+                  <tr>
+                    <th>Action</th><th>Organism ID</th><th>Organism name</th><th>ATCC</th><th>Batch</th><th>Manufacturer</th><th>Registered date</th><th>Purchase date</th><th>Received date</th><th>Storage</th><th>Rack / box</th><th>Status</th>
+                  </tr>
+                </thead>
+                <tbody id="organism-rows"></tbody>
+              </table>
+              <div class="empty-state is-hidden" id="empty-state"><span class="empty-icon">⌕</span><strong>No organisms match the current filters.</strong><span>Try a different search term or clear the filters.</span></div>
+            </div>
+            <div class="table-footer"><span id="result-summary">Showing 4 of 12 records</span><div class="pagination"><button class="page-button is-active" type="button">1</button><button class="page-button" type="button">2</button><button class="page-button" type="button">3</button><span>…</span><button class="page-button" type="button">→</button></div></div>
+          </section>
+        </section>
+
+        <section class="view" id="view-register" data-view-panel="register">
+          <div class="page-heading register-heading">
+            <div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Controlled intake</span><h1>Register QC organism</h1><p>Complete the four checkpoints before the organism is released to storage.</p></div>
+            <div class="heading-status"><span class="draft-pill"><span class="status-dot status-dot-amber"></span> Draft record</span><span class="record-reference">Next ID <strong>QC-2026-013</strong></span></div>
+          </div>
+
+          <div class="stepper" aria-label="Registration progress"><div class="stepper-item is-active"><span>1</span><strong>Identification</strong></div><div class="stepper-line"></div><div class="stepper-item"><span>2</span><strong>Acceptance</strong></div><div class="stepper-line"></div><div class="stepper-item"><span>3</span><strong>Inspection</strong></div><div class="stepper-line"></div><div class="stepper-item"><span>4</span><strong>Storage</strong></div></div>
+
+          <form id="register-form" novalidate>
+            <div class="form-grid form-grid-top">
+              <section class="card form-section" data-step="1">
+                <div class="section-heading"><div class="section-number">01</div><div><span class="eyebrow">Source &amp; identity</span><h2>Organism identification</h2><p>Capture the traceable identity exactly as shown on the certificate.</p></div><span class="required-note">* Required</span></div>
+                <div class="form-fields three-columns">
+                  <label class="field"><span>Organism ID <em>*</em></span><input name="organismId" value="QC-2026-013" readonly /></label>
+                  <label class="field"><span>QC organism <em>*</em></span><select name="organism"><option value="">Select organism</option><option>Escherichia coli ATCC 25922</option><option>Staphylococcus aureus ATCC 29213</option><option>Enterococcus faecalis ATCC 29212</option><option>Pseudomonas aeruginosa ATCC 27853</option></select></label>
+                  <label class="field"><span>Passage number <em>*</em></span><select name="passage"><option value="">Select passage</option><option>0 · Original reference</option><option>1 · Reference stock</option><option>2 · Working stock</option><option>3 · Working stock</option></select></label>
+                  <label class="field"><span>Code <em>*</em></span><input name="code" placeholder="e.g. EC-25922" /></label>
+                  <label class="field"><span>Batch / lot <em>*</em></span><input name="batch" placeholder="e.g. 25922-2026-A" /></label>
+                  <label class="field"><span>Manufacturer / source <em>*</em></span><input name="manufacturer" placeholder="e.g. ATCC" /></label>
+                  <label class="field"><span>Purchase date <em>*</em></span><input name="purchaseDate" type="date" /></label>
+                  <label class="field"><span>Received date <em>*</em></span><input name="receivedDate" type="date" /></label>
+                  <label class="field"><span>Expiry / review date</span><input name="expiryDate" type="date" /></label>
+                </div>
+              </section>
+
+              <section class="card form-section" data-step="2">
+                <div class="section-heading"><div class="section-number">02</div><div><span class="eyebrow">Identity confirmation</span><h2>Acceptance testing</h2><p>Record the test method and acceptance decision.</p></div><span class="result-pill result-pill-pending">Pending</span></div>
+                <div class="form-fields two-columns">
+                  <label class="field"><span>Plate / media <em>*</em></span><select name="plate"><option value="">Select media</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option><option>MacConkey agar</option><option>Sabouraud dextrose agar</option></select></label>
+                  <label class="field"><span>Lot number <em>*</em></span><input name="plateLot" placeholder="e.g. MHA-26-041" /></label>
+                  <label class="field"><span>Organism name observed</span><select name="observedOrganism"><option value="">Select result</option><option>Matches certificate</option><option>Does not match certificate</option><option>Not performed</option></select></label>
+                  <label class="field"><span>Method identification <em>*</em></span><select name="method"><option value="">Select method</option><option>Biochemical identification</option><option>MALDI-TOF</option><option>Microscopy &amp; staining</option><option>Reference certificate only</option></select></label>
+                  <label class="field"><span>Bio number</span><input name="bioNumber" placeholder="e.g. BIO-8841" /></label>
+                  <label class="field"><span>Confidence level</span><input name="confidence" placeholder="e.g. 99.9%" /></label>
+                  <label class="field field-span-2"><span>Acceptance result <em>*</em></span><select name="acceptanceResult"><option value="">Select result</option><option>Pass — accepted for stock preparation</option><option>Conditional — review required</option><option>Fail — quarantine</option></select></label>
+                </div>
+                <div class="callout callout-info"><span class="callout-icon">i</span><span>Keep the organism in <strong>quarantine</strong> until purity and identification checks are recorded.</span></div>
+              </section>
+            </div>
+
+            <div class="form-grid form-grid-bottom">
+              <section class="card form-section" data-step="3">
+                <div class="section-heading"><div class="section-number">03</div><div><span class="eyebrow">Receipt condition</span><h2>Inspection checklist</h2><p>Document the package, quantity and any deviation found on receipt.</p></div></div>
+                <div class="form-fields two-columns">
+                  <label class="field"><span>Ordered amount <em>*</em></span><input name="orderedAmount" type="number" min="1" placeholder="e.g. 10" /></label>
+                  <label class="field"><span>Number of tubes / loops per batch <em>*</em></span><input name="tubeCount" type="number" min="1" placeholder="e.g. 10" /></label>
+                  <label class="field"><span>Condition of package / tube <em>*</em></span><select name="condition"><option value="">Select condition</option><option>Intact — no deviation</option><option>Minor packaging damage</option><option>Temperature excursion</option><option>Leak / contamination suspected</option></select></label>
+                  <label class="field"><span>Cold-chain reading</span><input name="coldChain" placeholder="e.g. 4.2 °C on receipt" /></label>
+                  <label class="field field-span-2"><span>Inspection comment</span><textarea name="comment" rows="4" placeholder="Describe any receipt observation, deviation or corrective action."></textarea></label>
+                </div>
+                <label class="upload-zone" for="certificate-file"><span class="upload-glyph">↑</span><span><strong>Upload birth / authenticity certificate</strong><small>PDF only · max 10 MB · click to attach a mock file</small></span><span class="upload-action">Choose file</span><input id="certificate-file" name="certificate" type="file" accept="application/pdf" /></label>
+                <div class="file-chip is-hidden" id="selected-file"><span>PDF</span><strong></strong><button type="button" aria-label="Remove file" id="remove-file">×</button></div>
+              </section>
+
+              <section class="card form-section" data-step="4">
+                <div class="section-heading"><div class="section-number">04</div><div><span class="eyebrow">Release to storage</span><h2>Storage &amp; governance</h2><p>Assign a precise location and reviewers for the stock culture.</p></div></div>
+                <div class="form-fields two-columns">
+                  <label class="field"><span>Refrigerator / freezer <em>*</em></span><select name="storage"><option value="">Select location</option><option>Freezer 01 · −80 °C</option><option>Freezer 02 · −20 °C</option><option>Refrigerator 01 · 2–8 °C</option></select></label>
+                  <label class="field"><span>Rack and box <em>*</em></span><select name="rack"><option value="">Select rack / box</option><option>Rack A · Box 04</option><option>Rack B · Box 02</option><option>Rack C · Box 07</option><option>Rack D · Box 01</option></select></label>
+                  <label class="field"><span>Date performed <em>*</em></span><input name="performedDate" type="date" /></label>
+                  <label class="field"><span>Performed by <em>*</em></span><select name="performedBy"><option value="">Select user</option><option>Sarah A.</option><option>Dr. Amir R.</option><option>Nurul H.</option></select></label>
+                  <label class="field"><span>Reviewed by</span><select name="reviewedBy"><option value="">Select reviewer</option><option>Dr. Amir R.</option><option>Dr. Mei L.</option><option>Sarah A.</option></select></label>
+                  <label class="field"><span>Endorsed by</span><select name="endorsedBy"><option value="">Select endorser</option><option>Dr. Mei L.</option><option>Laboratory manager</option></select></label>
+                </div>
+                <div class="release-check"><label class="checkbox-row"><input type="checkbox" name="releaseToStorage" /><span></span><strong>Release to storage after acceptance</strong></label><small>Leave unchecked to save as a quarantine draft.</small></div>
+              </section>
+            </div>
+
+            <div class="form-actions"><button class="button button-ghost" type="button" data-view="dashboard">Close</button><div><button class="button button-secondary" type="button" id="save-draft">Save draft</button><button class="button button-primary" type="submit">Register QC organism <span class="button-symbol">→</span></button></div></div>
+          </form>
+        </section>
+
+        <section class="view" id="view-detail" data-view-panel="detail">
+          <div class="page-heading detail-heading"><div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Organism record</span><h1 id="detail-title">Escherichia coli ATCC 25922</h1><p id="detail-subtitle">QC-2026-004 · Reference stock · Last updated 18 Jun 2026</p></div><div class="detail-actions"><span class="status-badge status-active" id="detail-status">Active</span><div class="action-menu"><button class="button button-primary" type="button" data-action-toggle>Action <span class="button-symbol">⌄</span></button><div class="action-menu-list" data-action-menu><button type="button" data-view="storage">View storage location</button><button type="button" data-view="passages">View passage log</button><button type="button" data-view="subculture">Process subculture</button><button type="button" data-view="usage">Record usage / disposal</button></div></div></div></div>
+          <div class="detail-layout"><section class="detail-main"><div class="card detail-summary"><div class="detail-summary-top"><div class="organism-avatar">EC</div><div><span class="eyebrow">Reference organism</span><h2 id="detail-card-title">Escherichia coli ATCC 25922</h2><span class="detail-code" id="detail-code">EC-25922 · Batch 25922-2026-01</span></div><button class="button button-secondary" type="button" data-view="register">Edit record</button></div><div class="detail-stats"><div><span>Passage</span><strong id="detail-passage">P1</strong></div><div><span>Available tubes</span><strong id="detail-tubes">8 / 10</strong></div><div><span>Storage</span><strong id="detail-storage">−80 °C</strong></div><div><span>Review due</span><strong id="detail-review">30 Jun 2027</strong></div></div></div><div class="card detail-tabs-card"><div class="detail-tabs"><button class="detail-tab is-active" type="button" data-detail-tab="overview">Overview</button><button class="detail-tab" type="button" data-detail-tab="acceptance">Acceptance</button><button class="detail-tab" type="button" data-detail-tab="activity">Activity</button></div><div class="detail-tab-panel is-visible" data-detail-panel="overview"><div class="detail-grid"><div><span class="detail-label">Manufacturer</span><strong id="detail-manufacturer">ATCC</strong></div><div><span class="detail-label">Purchase date</span><strong id="detail-purchase">18 Jun 2026</strong></div><div><span class="detail-label">Received date</span><strong id="detail-received">20 Jun 2026</strong></div><div><span class="detail-label">Source certificate</span><strong>ATCC-COA-25922.pdf <span class="text-link">View</span></strong></div></div><div class="subsection-heading"><h3>Chain of custody</h3><span>All events are mockup examples</span></div><div class="timeline"><div class="timeline-item"><span class="timeline-dot timeline-dot-green"></span><div><strong>Released to Freezer 01</strong><span>Rack A · Box 04 · 20 Jun 2026 by Sarah A.</span></div><time>20 Jun</time></div><div class="timeline-item"><span class="timeline-dot timeline-dot-blue"></span><div><strong>Acceptance passed</strong><span>Purity and identification confirmed · MALDI-TOF</span></div><time>20 Jun</time></div><div class="timeline-item"><span class="timeline-dot timeline-dot-purple"></span><div><strong>Received in microbiology</strong><span>10 cryovials received in intact cold chain</span></div><time>20 Jun</time></div></div></div><div class="detail-tab-panel" data-detail-panel="acceptance"><div class="acceptance-banner"><span class="acceptance-check">✓</span><div><strong>Accepted for QC use</strong><span>All required identity and purity checks are complete.</span></div><span class="status-badge status-active">Pass</span></div><div class="detail-grid"><div><span class="detail-label">Plate / media</span><strong>Blood agar plate</strong></div><div><span class="detail-label">Media lot</span><strong>MHA-26-041</strong></div><div><span class="detail-label">Method</span><strong>MALDI-TOF</strong></div><div><span class="detail-label">Confidence</span><strong>99.9%</strong></div></div></div><div class="detail-tab-panel" data-detail-panel="activity"><div class="activity-list"><div class="activity-row"><span class="activity-icon">↗</span><div><strong>Working stock prepared</strong><span>Passage 2 · 10 tubes · by Sarah A.</span></div><time>01 Jul 2026</time></div><div class="activity-row"><span class="activity-icon">−</span><div><strong>Tube withdrawn for AST QC</strong><span>Tube 03 · purpose: weekly AST panel</span></div><time>08 Jul 2026</time></div><div class="activity-row"><span class="activity-icon">✓</span><div><strong>Record reviewed</strong><span>Reviewed by Dr. Amir R.</span></div><time>30 Jun 2026</time></div></div></div></div></div></section><aside class="detail-aside"><div class="card side-card"><div class="side-card-heading"><h3>Quick actions</h3><span class="eyebrow">Next step</span></div><button class="quick-action" type="button" data-view="passages"><span class="quick-action-icon">↗</span><span><strong>Record passage</strong><small>Create a new working stock</small></span><span>→</span></button><button class="quick-action" type="button" data-view="usage"><span class="quick-action-icon">⇄</span><span><strong>Withdraw a tube</strong><small>Log controlled usage</small></span><span>→</span></button><button class="quick-action" type="button" data-view="storage"><span class="quick-action-icon">▣</span><span><strong>Move storage</strong><small>Update rack or box</small></span><span>→</span></button></div><div class="card side-card"><div class="side-card-heading"><h3>Storage note</h3><span class="status-badge status-active">In range</span></div><div class="temperature-row"><span>Freezer 01</span><strong>−80.4 °C</strong></div><div class="temperature-bar"><span></span></div><small class="muted-copy">Last checked today at 08:10. Alert threshold: −70 °C.</small></div></aside></div>
+        </section>
+
+        <section class="view" id="view-acceptance" data-view-panel="acceptance">
+          <div class="page-heading"><div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Checkpoint 02</span><h1>Acceptance testing</h1><p>Verify identity, purity and suitability before release to storage.</p></div><span class="status-badge status-pending">2 pending</span></div>
+          <div class="card acceptance-queue"><div class="table-card-heading"><div><h2>Acceptance queue</h2><p>Each record stays quarantined until the result is captured.</p></div><button class="button button-secondary" type="button" data-view="register">Register new intake</button></div><div class="queue-grid"><article class="queue-item"><div class="queue-item-top"><span class="status-badge status-pending">Pending test</span><span class="queue-date">Received 25 Jul 2026</span></div><h3>Staphylococcus aureus ATCC 29213</h3><p>QC-2026-011 · Batch 29213-2026-B · 10 tubes</p><div class="queue-meta"><span><strong>Plate</strong> Blood agar</span><span><strong>Method</strong> MALDI-TOF</span></div><button class="button button-primary button-small" type="button" data-view="register">Open checklist →</button></article><article class="queue-item"><div class="queue-item-top"><span class="status-badge status-review">Review required</span><span class="queue-date">Received 23 Jul 2026</span></div><h3>Enterococcus faecalis ATCC 29212</h3><p>QC-2026-010 · Batch 29212-2026-A · 5 tubes</p><div class="queue-meta"><span><strong>Plate</strong> MHA plate</span><span><strong>Method</strong> Biochemical</span></div><button class="button button-primary button-small" type="button" data-view="register">Review result →</button></article></div></div>
+          <div class="card acceptance-guidance"><div class="guidance-icon">i</div><div><h2>Acceptance gate</h2><p>Document the received condition, purity observation, identification method and final result. A failed or conditional result should remain in quarantine and create a deviation record.</p></div><button class="text-button" type="button" data-view="usage">View audit history →</button></div>
+        </section>
+
+        <section class="view" id="view-storage" data-view-panel="storage">
+          <div class="page-heading"><div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Checkpoint 03</span><h1>Storage map</h1><p>Know exactly where each tube is held, and when the location was last verified.</p></div><button class="button button-primary" type="button" id="log-temperature">＋ Log temperature</button></div>
+          <div class="storage-summary"><div class="storage-summary-card"><span class="storage-card-icon">❄</span><div><span>Freezer 01 · −80 °C</span><strong>8 organisms</strong></div><span class="status-badge status-active">In range</span></div><div class="storage-summary-card"><span class="storage-card-icon">❄</span><div><span>Freezer 02 · −20 °C</span><strong>3 organisms</strong></div><span class="status-badge status-review">Review</span></div><div class="storage-summary-card"><span class="storage-card-icon">▣</span><div><span>Refrigerator 01 · 2–8 °C</span><strong>1 organism</strong></div><span class="status-badge status-active">In range</span></div></div>
+          <div class="storage-layout"><section class="card freezer-map"><div class="table-card-heading"><div><h2>Freezer 01 <span class="muted-heading">· −80 °C</span></h2><p>Click a box to see the organisms assigned to it.</p></div><span class="storage-last-check">Last check today · 08:10</span></div><div class="rack-tabs"><button class="rack-tab is-active" type="button">Rack A</button><button class="rack-tab" type="button">Rack B</button><button class="rack-tab" type="button">Rack C</button></div><div class="box-grid"><button class="storage-box is-selected" type="button"><span class="box-label">Box 04</span><strong>3 / 10</strong><small>QC-2026-004</small></button><button class="storage-box" type="button"><span class="box-label">Box 05</span><strong>6 / 10</strong><small>Available</small></button><button class="storage-box" type="button"><span class="box-label">Box 06</span><strong>10 / 10</strong><small>Full</small></button><button class="storage-box" type="button"><span class="box-label">Box 07</span><strong>2 / 10</strong><small>QC-2026-008</small></button><button class="storage-box" type="button"><span class="box-label">Box 08</span><strong>0 / 10</strong><small>Available</small></button><button class="storage-box" type="button"><span class="box-label">Box 09</span><strong>7 / 10</strong><small>QC-2026-009</small></button></div></section><aside class="card storage-detail"><span class="eyebrow">Selected location</span><h2>Rack A · Box 04</h2><p>3 active organisms assigned to this box.</p><div class="storage-organism"><div class="organism-avatar small-avatar">EC</div><div><strong>Escherichia coli ATCC 25922</strong><span>8 tubes remaining · QC-2026-004</span></div></div><div class="storage-organism"><div class="organism-avatar small-avatar purple-avatar">PA</div><div><strong>Pseudomonas aeruginosa ATCC 27853</strong><span>6 tubes remaining · QC-2026-008</span></div></div><div class="storage-organism"><div class="organism-avatar small-avatar amber-avatar">EF</div><div><strong>Enterococcus faecalis ATCC 29212</strong><span>5 tubes remaining · QC-2026-010</span></div></div><button class="button button-secondary full-width" type="button" data-view="detail">View selected record</button></aside></div>
+        </section>
+
+        <section class="view" id="view-passages" data-view-panel="passages">
+          <div class="page-heading"><div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Checkpoint 04</span><h1>Passage log</h1><p>Limit subcultures and keep the stock-to-working-culture chain visible.</p></div><button class="button button-primary" type="button" id="add-passage">＋ Record passage</button></div>
+          <div class="card passage-card"><div class="table-card-heading"><div><h2>Recent passage activity</h2><p>Working cultures should be prepared from a traceable reference stock.</p></div><span class="status-badge status-active">12 active stocks</span></div><div class="table-wrap"><table class="data-table passage-table"><thead><tr><th>Date</th><th>Organism</th><th>From</th><th>To</th><th>Quantity</th><th>Performed by</th><th>Result</th></tr></thead><tbody><tr><td>01 Jul 2026</td><td><strong>Escherichia coli ATCC 25922</strong><small>QC-2026-004</small></td><td>P1 · Reference stock</td><td>P2 · Working stock</td><td>10 tubes</td><td>Sarah A.</td><td><span class="status-badge status-active">Passed</span></td></tr><tr><td>25 Jun 2026</td><td><strong>Staphylococcus aureus ATCC 29213</strong><small>QC-2026-006</small></td><td>P0 · Original reference</td><td>P1 · Reference stock</td><td>10 tubes</td><td>Nurul H.</td><td><span class="status-badge status-active">Passed</span></td></tr><tr><td>18 Jun 2026</td><td><strong>Pseudomonas aeruginosa ATCC 27853</strong><small>QC-2026-008</small></td><td>P1 · Reference stock</td><td>P2 · Working stock</td><td>10 tubes</td><td>Sarah A.</td><td><span class="status-badge status-review">Review</span></td></tr></tbody></table></div></div><div class="card passage-guidance"><div class="guidance-icon">↗</div><div><h2>Passage guardrail</h2><p>Record the source passage, new passage, tube count and purity result. If a frozen stock has been thawed, flag it as consumed rather than refreezing it.</p></div><span class="source-note">Reference: local SOP to be confirmed</span></div>
+        </section>
+
+        <section class="view" id="view-usage" data-view-panel="usage">
+          <div class="page-heading"><div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Controlled movement</span><h1>Usage &amp; disposal</h1><p>Log every withdrawal, return, consumed tube and final decontamination.</p></div><button class="button button-primary" type="button" id="record-usage">＋ Record movement</button></div>
+          <div class="usage-grid"><section class="card movement-form"><div class="section-heading"><div class="section-number">01</div><div><span class="eyebrow">Quick movement entry</span><h2>Withdraw a tube</h2><p>Use this form for a controlled QC run or disposal.</p></div></div><div class="form-fields two-columns"><label class="field field-span-2"><span>Organism <em>*</em></span><select id="usage-organism"><option>Escherichia coli ATCC 25922 · QC-2026-004</option><option>Staphylococcus aureus ATCC 29213 · QC-2026-006</option><option>Pseudomonas aeruginosa ATCC 27853 · QC-2026-008</option></select></label><label class="field"><span>Movement type <em>*</em></span><select id="usage-type"><option>Withdraw for QC testing</option><option>Prepare working stock</option><option>Return unused tube</option><option>Dispose / decontaminate</option></select></label><label class="field"><span>Tube / loop ID</span><input id="usage-tube" placeholder="e.g. T03" /></label><label class="field field-span-2"><span>Purpose / comment</span><textarea id="usage-comment" rows="3" placeholder="e.g. Weekly AST QC run"></textarea></label></div><div class="form-actions inline-form-actions"><button class="button button-ghost" type="button" id="reset-usage">Clear</button><button class="button button-primary" type="button" id="save-usage">Save movement</button></div></section><section class="card usage-history"><div class="table-card-heading"><div><h2>Recent movements</h2><p>Audit-ready history for the selected stock.</p></div><span class="count-badge">This month · 7</span></div><div class="movement-list"><div class="movement-row"><span class="movement-icon movement-withdraw">−</span><div><strong>Tube T03 withdrawn</strong><span>Escherichia coli ATCC 25922 · Weekly AST QC run</span></div><time>08 Jul 2026<br><small>Sarah A.</small></time></div><div class="movement-row"><span class="movement-icon movement-create">↗</span><div><strong>Working stock prepared</strong><span>Pseudomonas aeruginosa ATCC 27853 · 10 tubes</span></div><time>01 Jul 2026<br><small>Sarah A.</small></time></div><div class="movement-row"><span class="movement-icon movement-dispose">×</span><div><strong>Tube T04 decontaminated</strong><span>Staphylococcus aureus ATCC 29213 · Expired working tube</span></div><time>28 Jun 2026<br><small>Nurul H.</small></time></div></div></section></div><div class="card disposal-guidance"><div class="guidance-icon">!</div><div><h2>Disposal requires a reason</h2><p>Choose a disposal reason, record who performed it and follow the laboratory’s approved biohazard decontamination procedure. The mockup records the event only; your local SOP remains the authority.</p></div></div>
+        </section>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"><span class="toast-icon">✓</span><span id="toast-message">Saved</span></div>
+  <script src="shell-overrides.js"></script><script src="Main_Page.js"></script>
+</body>
+</html>

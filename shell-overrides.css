@@ -1,0 +1,56 @@
+/* Shared LIS STRATEQ shell: sidebar, top bar and footer */
+body { background: #f7f7f7; }
+.app-shell { min-height: 100vh; background: #f7f7f7; }
+.sidebar { width: 300px; flex-basis: 300px; padding: 0 0 18px; color: #2f3e4b; background: #edf4f8; border-right: 1px solid #d7e0e6; }
+.brand-lockup { height: 34px; gap: 8px; padding: 0 18px; background: #236b92; }
+.brand-mark { width: 25px; height: 25px; border-radius: 50%; color: #236b92; background: #e7eef2; box-shadow: none; font-size: 10px; }
+.brand-title { color: #f5fbff; font-size: 13px; font-weight: 500; }
+.brand-subtitle { display: none; }
+.workspace-picker { position: relative; margin: 0; min-height: 83px; padding: 16px 16px 12px 88px; border: 0; border-radius: 0; background: #fff; }
+.workspace-picker::before { position: absolute; top: 11px; left: 12px; width: 64px; height: 64px; border-radius: 50%; background: #586a87; box-shadow: inset 0 0 0 8px #dce4ec; content: ""; }
+.workspace-picker .eyebrow, .workspace-status { display: none; }
+.workspace-picker strong { margin: 0; color: #1686dc; font-size: 14px; font-weight: 500; }
+.sidebar-nav { gap: 0; padding-top: 0; }
+.nav-label { margin: 0; padding: 7px 7px 6px; color: #e9f5fb; background: #236b92; font-size: 10px; letter-spacing: .04em; }
+.nav-item { min-height: 35px; gap: 8px; padding: 0 12px; border-radius: 0; color: #39444d; font-size: 14px; }
+.nav-item:hover { color: #fff; background: #328cc3; }
+.nav-item.is-active { color: #fff; background: #328cc3; box-shadow: none; }
+.nav-icon, .nav-item.is-active .nav-icon { width: 16px; color: #697984; font-size: 15px; }
+.nav-item.is-active .nav-icon { color: #fff; }
+.nav-count { color: #fff; background: transparent; }
+.sidebar-footer { display: none; }
+.main-content { position: relative; min-height: 100vh; padding-bottom: 34px; background: #fff; }
+.topbar { height: 34px; padding: 0 14px; border-bottom: 0; color: #fff; background: #236b92; }
+.breadcrumbs { color: #24313d; font-size: 16px; }
+.breadcrumbs span:first-child, .breadcrumbs .crumb-separator { display: none; }
+.breadcrumbs strong { color: #24313d; font-weight: 500; }
+.topbar-actions { gap: 16px; }
+.environment-pill { display: none; }
+.topbar .icon-button, .topbar .notification-button { color: #fff; }
+.topbar-actions::before { color: #fff; content: "⚙ Settings        👤 Profile⌄"; font-size: 13px; }
+.topbar-actions > .icon-button, .topbar-actions > .notification-button { display: none; }
+.page-container { padding: 0 7px 20px; background: #fff; }
+.page-heading { padding-top: 10px; }
+.module-submenu { min-height: calc(100vh - 105px); padding: 0 0 30px; background: #fff; }
+.module-submenu-heading { height: 34px; display: flex; align-items: center; gap: 7px; padding: 0 8px; border-bottom: 1px solid #d9e1e7; color: #26333e; font-size: 17px; }
+.module-submenu-heading em { color: #87929c; font-size: 14px; font-style: italic; font-weight: 400; }
+.module-card-grid { display: grid; grid-template-columns: repeat(4, minmax(180px, 1fr)); gap: 18px 12px; padding: 13px 10px; }
+.module-card { min-height: 59px; display: flex; align-items: flex-start; gap: 12px; padding: 10px 11px; border: 1px solid #e0e4e7; border-radius: 4px; color: #111; background: #fff; box-shadow: 0 2px 5px rgba(0,0,0,.12); text-align: left; }
+.module-card:hover, .module-card-primary { border-color: #6bc8a4; }
+.module-card-icon { width: 17px; flex: 0 0 17px; color: #0cae74; font-size: 19px; line-height: 1.1; }
+.module-card strong, .module-card em { display: block; }
+.module-card strong { font-size: 14px; line-height: 1.2; }
+.module-card em { margin-top: 2px; font-size: 13px; font-style: italic; font-weight: 400; }
+.module-card-primary { cursor: pointer; }
+.unavailable-page { min-height: calc(100vh - 105px); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; background: #fff; text-align: center; }
+.unavailable-page h1 { color: #24313d; font-size: 26px; letter-spacing: -.02em; }
+.unavailable-page p { margin-top: 8px; color: #87929c; font-size: 14px; }
+@media (max-width: 900px) { .module-card-grid { grid-template-columns: repeat(2, minmax(180px, 1fr)); } }
+.main-content::after { position: fixed; right: 0; bottom: 0; left: 300px; z-index: 5; min-height: 34px; display: flex; align-items: center; justify-content: space-between; padding: 0 14px; border-top: 1px solid #d6e0e6; color: #87929c; background: #fff; content: "Copyright © 2026 LIS STRATEQ. All rights reserved.                                      Version 1.0.12 | Auto logout in : 60:00"; font-size: 12px; white-space: pre; }
+@media (max-width: 680px) {
+  .sidebar { width: 100%; min-height: auto; }
+  .brand-lockup { justify-content: flex-start; }
+  .workspace-picker { display: none; }
+  .main-content { padding-bottom: 0; }
+  .main-content::after { position: static; min-height: 34px; padding: 8px 12px; content: "Copyright © 2026 LIS STRATEQ. All rights reserved."; white-space: normal; }
+}

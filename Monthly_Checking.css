@@ -1,0 +1,20 @@
+.monthly-page { max-width: 1120px; margin: 0 auto; }
+.monthly-card { margin-top: 22px; padding: 24px; }
+.monthly-card .section-heading { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 22px; }
+.monthly-card .section-number { width: 28px; height: 28px; display: grid; place-items: center; flex: 0 0 28px; border-radius: 50%; color: #fff; background: #1677e8; font-size: 11px; font-weight: 800; }
+.monthly-card .section-heading h2 { margin-top: 3px; }
+.monthly-card .section-heading p { margin-top: 4px; font-size: 12px; }
+.monthly-card .form-fields { gap: 18px 16px; }
+.monthly-card .field input, .monthly-card .field select { min-height: 42px; }
+.monthly-card .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
+.monthly-card .button-review { color: #fff; background: #1c9a75; box-shadow: 0 7px 16px rgba(28,154,117,.18); }
+.monthly-card .button-review:hover { background: #157b5e; }
+.monthly-card .button-perform { color: #fff; background: #d99a18; box-shadow: 0 7px 16px rgba(217,154,24,.18); }
+.monthly-card .button-perform:hover { background: #b47d0f; }
+.monthly-modal-backdrop { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; padding: 20px; background: rgba(19,35,51,.38); }
+.monthly-modal { width: min(390px, 100%); padding: 28px 24px 23px; border: 1px solid #dce6ed; border-radius: 12px; background: #fff; box-shadow: 0 18px 45px rgba(24,49,70,.22); text-align: center; }
+.monthly-modal-icon { width: 43px; height: 43px; display: grid; place-items: center; margin: 0 auto 12px; border-radius: 50%; color: #fff; background: #1c9a75; font-size: 24px; font-weight: 800; }
+.monthly-modal h2 { color: #1d2b3b; font-size: 20px; }
+.monthly-modal p { margin: 7px 0 20px; color: #70849a; font-size: 13px; }
+.monthly-modal-actions { display: flex; justify-content: center; gap: 10px; }
+@media (max-width: 680px) { .monthly-card { padding: 16px; }.monthly-card .form-actions { display: block; }.monthly-card .form-actions .button { width: 100%; margin-top: 8px; } }

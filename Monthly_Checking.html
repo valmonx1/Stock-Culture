@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Monthly Stock Culture Checking</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="Monthly_Checking.css" />
+  <link rel="stylesheet" href="shell-overrides.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand-lockup"><div class="brand-mark">MC</div><div><div class="brand-title">Microbiology</div><div class="brand-subtitle">Laboratory information system</div></div></div>
+      <div class="workspace-picker"><span class="eyebrow">Current workspace</span><strong>Quality control</strong><span class="workspace-status"><span class="status-dot"></span> Live mockup data</span></div>
+      <nav class="sidebar-nav" aria-label="Main menu"></nav>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div class="breadcrumbs"><span>Microbiology</span><span class="crumb-separator">/</span><strong id="breadcrumb-current">Monthly checking</strong></div><div class="topbar-actions"><span class="environment-pill"><span class="status-dot"></span> Local mockup</span><button class="icon-button" type="button">?</button><button class="notification-button" type="button">◈</button></div></header>
+      <div class="page-container">
+        <section class="monthly-page">
+          <div class="page-heading"><div><span class="eyebrow accent-eyebrow">Stock culture control</span><h1>Monthly Stock Culture Checking</h1><p>Record the monthly verification result for each stock culture vial.</p></div></div>
+          <form class="card monthly-card" id="monthly-checking-form">
+            <div class="section-heading"><div class="section-number">01</div><div><span class="eyebrow">Monthly verification</span><h2>Culture checking details</h2><p>Complete all fields before saving the monthly check.</p></div></div>
+            <div class="form-fields two-columns">
+              <label class="field"><span>ATCC <em>*</em></span><select name="atcc" required><option value="">Select ATCC</option><option>ATCC 25922</option><option>ATCC 29213</option><option>ATCC 29212</option><option>ATCC 27853</option></select></label>
+              <label class="field"><span>Source tube / (Stock Culture Vial) <em>*</em></span><select name="sourceVial" required><option value="">Select vial</option><option>V1</option><option>V2</option><option>V3</option><option>V4</option><option>V5</option><option>V6</option><option>V7</option><option>V8</option><option>V9</option><option>V10</option><option>V11</option><option>V12</option></select></label>
+              <label class="field"><span>Identification Test <em>*</em></span><select name="identificationTest" required><option value="">Select test</option><option>Gram Stain</option><option>Catalase</option><option>Oxidase</option><option>Coagulase</option><option>PYR Hydrolysis</option><option>Streptococcal Grouping</option><option>India Ink</option><option>Staphylase</option><option>Germ Tube</option><option>Cefinase</option><option>Motility Test Medium</option><option>Triple Sugar Iron</option><option>Urease</option><option>Bile Esculin Agar</option><option>Simmons Citrate Agar</option><option>Moeller Decarboxylase 2% Ornithine</option><option>V Factor</option><option>X Factor</option><option>XV Factor</option><option>MTZ Disc</option><option>Optochin Disc</option><option>Bacitracin 10 ug Disc</option><option>Malditof</option><option>Vitek</option></select></label>
+              <label class="field"><span>Expected Result <em>*</em></span><select name="expectedResult" required disabled><option value="">Select identification test first</option></select></label>
+              <label class="field"><span>Performance <em>*</em></span><select name="performance" required><option value="">Select performance</option><option>Pass</option><option>Fail</option></select></label>
+              <label class="field"><span>Lot Number <em>*</em></span><input name="lotNumber" required placeholder="Enter lot number" /></label>
+              <label class="field"><span>Expiry Date <em>*</em></span><input name="expiringDate" type="date" required /></label>
+            </div>
+            <div class="form-actions"><button class="button button-ghost" type="button" id="monthly-close">Close</button><div><button class="button button-perform" type="submit">Perform</button><button class="button button-review" type="button" id="monthly-review">Review</button></div></div>
+          </form>
+        </section>
+      </div>
+    </main>
+  </div>
+  <script src="shell-overrides.js"></script>
+  <script src="Monthly_Checking.js"></script>
+</body>
+</html>
