@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="shell-overrides.css" />
 </head>
-<body>
+<body class="qc-register-index">
   <div class="app-shell">
     <aside class="sidebar" aria-label="Primary navigation">
       <div class="brand-lockup">
@@ -135,11 +135,11 @@
           <section class="card table-card">
             <div class="table-card-heading">
               <div>
-                <div class="heading-with-count"><h2>QC organism register</h2><span class="count-badge">12 records</span></div>
+                <div class="heading-with-count"><h2>QC Organism Master List</h2><span class="count-badge">12 records</span></div>
                 <p>Use the action menu to open the related page for each organism.</p>
               </div>
               <div class="heading-actions">
-                <button class="button button-secondary" type="button" id="export-button"><span class="button-symbol">↓</span> Export view</button>
+                <button class="button button-secondary" type="button" id="export-button" title="Download Master List" aria-label="Download Master List"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="3" width="14" height="18" rx="2" fill="#21a366"/><path d="M13 7h6M13 12h6M13 17h6M16 5v14" stroke="#fff" stroke-opacity=".65"/><rect x="1" y="6" width="13" height="13" rx="2" fill="#107c41"/><path d="m5 9 5 7m0-7-5 7" stroke="#fff" stroke-width="1.8"/></svg></button>
                 <button class="button button-ghost" type="button" id="clear-filters">Clear filters</button>
               </div>
             </div>
@@ -148,14 +148,14 @@
               <label class="search-field"><span class="search-icon" aria-hidden="true">⌕</span><input id="global-search" type="search" placeholder="Search organism, code or batch" autocomplete="off" /></label>
               <label class="filter-field"><span>Status</span><select id="status-filter"><option value="all">All status</option><option value="Active">Active</option><option value="Pending acceptance">Pending acceptance</option><option value="Review due">Review due</option></select></label>
               <label class="filter-field"><span>Storage</span><select id="storage-filter"><option value="all">All locations</option><option value="Freezer 01">Freezer 01</option><option value="Freezer 02">Freezer 02</option><option value="Refrigerator 01">Refrigerator 01</option></select></label>
-              <button class="filter-button" type="button" id="apply-filters">Filter <span>⌄</span></button>
+              <button class="filter-button" type="button" id="apply-filters" title="Apply filters" aria-label="Apply filters"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
             </div>
 
             <div class="table-wrap">
               <table class="data-table" id="organism-table">
                 <thead>
                   <tr>
-                    <th>Action</th><th>Organism ID</th><th>Organism name</th><th>ATCC</th><th>Batch</th><th>Manufacturer</th><th>Registered date</th><th>Purchase date</th><th>Received date</th><th>Storage</th><th>Rack / box</th><th>Status</th>
+                    <th>Action</th><th>Organism ID</th><th>Organism Name</th><th>Batch/Lot Number</th><th>Manufacturer</th><th>Registered date</th><th>Purchase date</th><th>Received date</th><th>Storage</th><th>Rack / box</th><th>Status</th>
                   </tr>
                 </thead>
                 <tbody id="organism-rows"></tbody>

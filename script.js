@@ -36,6 +36,11 @@ function loadRecords() {
   }
 }
 
+// Browser Back may restore native select values from the page cache.
+window.addEventListener('pageshow', () => {
+  document.querySelectorAll('[data-record-action]').forEach(select => { select.value = ''; });
+});
+
 function persistRecords() {
   try { window.localStorage.setItem("stock-culture-records", JSON.stringify(state.records)); } catch (error) { /* Static mockup can continue without browser storage. */ }
 }
@@ -47,6 +52,111 @@ function showToast(message) {
   window.clearTimeout(showToast.timer);
   showToast.timer = window.setTimeout(() => toast.classList.remove("is-visible"), 2800);
 }
+
+// Capture the exact row shown in the Master List before its Entry navigation.
+document.addEventListener("change", (event) => {
+  const select = event.target.closest("[data-record-action]");
+  if (!select || select.value !== "test") return;
+  const selected = state.records.find(record => record.id === select.dataset.recordAction);
+  if (selected) {
+    try { sessionStorage.setItem("qc-entry-selected-record", JSON.stringify(selected)); }
+    catch (error) { showToast("Unable to pass the selected record to Entry. Browser storage is unavailable."); }
+  }
+}, true);
+
+function closeAcceptanceModal() {
+  document.querySelector(".acceptance-edit-backdrop")?.remove();
+}
+
+function openAcceptanceModal(recordId) {
+  const record = state.records.find((item) => item.id === recordId);
+  if (!record) return;
+  closeAcceptanceModal();
+  const saved = record.acceptance || {};
+  const passageNumber = String(record.passage || "0").replace(/^P/i, "");
+  const passageLabel = `${passageNumber} · ${passageNumber === "0" ? "Original reference" : passageNumber === "1" ? "Reference stock" : "Working stock"}`;
+  const savedRegistration = record.registration || { organism: record.name, passage: passageLabel, atcc: (record.name.match(/ATCC\s+\d+/i) || [record.code])[0], batch: record.batch, manufacturer: record.manufacturer, purchaseDate: "", receivedDate: "", expiryDate: "", orderedAmount: String(record.tubes || "").split("/").pop()?.trim(), tubeCount: String(record.tubes || "").split("/").pop()?.trim(), condition: "", coldChain: "", comment: "", storage: `${record.storage} · ${record.temperature}`, rack: record.location, endorsedBy: "", releaseToStorage: record.status === "Active" };
+  const backdrop = document.createElement("div");
+  backdrop.className = "acceptance-edit-backdrop";
+  backdrop.innerHTML = `<section class="acceptance-edit-modal" role="dialog" aria-modal="true" aria-labelledby="acceptance-edit-title">
+    <div class="acceptance-edit-head"><div><span class="eyebrow accent-eyebrow">Complete QC record</span><h2 id="acceptance-edit-title">Update QC organism</h2><p>${record.name} · ${record.id}</p></div><button type="button" class="acceptance-edit-close" aria-label="Close">×</button></div>
+    <form id="acceptance-edit-form">
+    <section class="acceptance-edit-section"><h3><span>01</span> Organism Identification</h3><div class="acceptance-edit-grid">
+      <label class="field"><span>QC organism <em>*</em></span><select name="organism" required><option value="">Select organism</option><option>Escherichia coli ATCC 25922</option><option>Staphylococcus aureus ATCC 29213</option><option>Enterococcus faecalis ATCC 29212</option><option>Pseudomonas aeruginosa ATCC 27853</option></select></label>
+      <label class="field"><span>Passage number <em>*</em></span><select name="passage" required><option value="">Select passage</option><option>0 · Original reference</option><option>1 · Reference stock</option><option>2 · Working stock</option><option>3 · Working stock</option></select></label>
+      <label class="field"><span>ATCC <em>*</em></span><input name="atcc" required></label>
+      <label class="field"><span>Batch / lot <em>*</em></span><input name="batch" required></label>
+      <label class="field"><span>Manufacturer / source <em>*</em></span><input name="manufacturer" required></label>
+      <label class="field"><span>Purchase date</span><input name="purchaseDate" type="date"></label>
+      <label class="field"><span>Received date</span><input name="receivedDate" type="date"></label>
+      <label class="field"><span>Expiry / review date</span><input name="expiryDate" type="date"></label>
+    </div></section>
+    <section class="acceptance-edit-section"><h3><span>02</span> Acceptance Testing</h3><div class="acceptance-edit-grid">
+      <label class="field"><span>Plate / media <em>*</em></span><select name="plate" required><option value="">Select media</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option><option>MacConkey agar</option><option>Sabouraud dextrose agar</option></select></label>
+      <label class="field"><span>Description</span><input name="description" placeholder="Free-text description"></label>
+      <label class="field"><span>Lot number <em>*</em></span><input name="lot" required placeholder="e.g. MHA-26-041"></label>
+      <label class="field"><span>Organism name observed</span><select name="observedOrganism"><option value="">Select result</option><option>Matches certificate</option><option>Does not match certificate</option><option>Not performed</option></select></label>
+      <label class="field"><span>Method identification <em>*</em></span><select name="method" required><option value="">Select method</option><option>Biochemical identification</option><option>MALDI-TOF</option><option>Microscopy &amp; staining</option><option>Reference certificate only</option></select></label>
+      <label class="field"><span>Bio number</span><input name="bioNumber" placeholder="e.g. BIO-8841"></label>
+      <label class="field"><span>Incubation description</span><select name="incubation"><option value="">Select incubation</option><option>35–37 °C for 18–24 hours</option><option>35–37 °C for 24–48 hours</option><option>Room temperature</option><option>Other condition</option></select></label>
+      <label class="field"><span>Gram stain</span><select name="gramStain"><option value="">Select result</option><option>Gram positive</option><option>Gram negative</option><option>Not performed</option></select></label>
+      <label class="field"><span>Identification</span><select name="identification"><option value="">Select identification</option><option>Confirmed</option><option>Presumptive</option><option>Not identified</option></select></label>
+      <label class="field"><span>Performed by</span><select name="performedBy"><option value="">Select user</option><option>Sarah A.</option><option>Dr. Amir R.</option><option>Nurul H.</option></select></label>
+      <label class="field"><span>Reviewed by</span><select name="reviewedBy"><option value="">Select reviewer</option><option>Dr. Amir R.</option><option>Dr. Mei L.</option><option>Sarah A.</option></select></label>
+      <label class="field acceptance-edit-result"><span>Acceptance result <em>*</em></span><select name="result" required><option value="">Select result</option><option>Pass — accepted for stock preparation</option><option>Conditional — review required</option><option>Fail — quarantine</option></select></label>
+    </div></section>
+    <section class="acceptance-edit-section"><h3><span>03</span> Inspection Checklist</h3><div class="acceptance-edit-grid">
+      <label class="field"><span>Ordered amount <em>*</em></span><input name="orderedAmount" type="number" min="1" required></label>
+      <label class="field"><span>Number of stock culture vials <em>*</em></span><input name="tubeCount" type="number" min="1" required></label>
+      <label class="field"><span>Condition of package / vial <em>*</em></span><select name="condition" required><option value="">Select condition</option><option>Intact — no deviation</option><option>Minor packaging damage</option><option>Temperature excursion</option><option>Leak / contamination suspected</option></select></label>
+      <label class="field"><span>Cold-chain reading</span><input name="coldChain" placeholder="e.g. 4.2 °C on receipt"></label>
+      <label class="field acceptance-edit-wide"><span>Inspection comment</span><textarea name="comment" rows="3"></textarea></label>
+    </div></section>
+    <section class="acceptance-edit-section"><h3><span>04</span> Storage &amp; Governance</h3><div class="acceptance-edit-grid">
+      <label class="field"><span>Refrigerator / freezer</span><select name="storage"><option value="">Select location</option><option>Freezer 01 · −80 °C</option><option>Freezer 02 · −20 °C</option><option>Refrigerator 01 · 2–8 °C</option></select></label>
+      <label class="field"><span>Rack and box</span><select name="rack"><option value="">Select rack / box</option><option>Rack A · Box 04</option><option>Rack B · Box 02</option><option>Rack C · Box 07</option><option>Rack D · Box 01</option></select></label>
+      <label class="field"><span>Endorsed by</span><select name="endorsedBy"><option value="">Select endorser</option><option>Dr. Mei L.</option><option>Laboratory manager</option></select></label>
+      <label class="acceptance-release"><input name="releaseToStorage" type="checkbox"><span>Release to storage after acceptance</span></label>
+    </div></section>
+    <div class="acceptance-edit-note"><span>i</span><p>Changes update this QC organism record and its status in the register.</p></div><div class="acceptance-edit-actions"><button class="button button-ghost acceptance-edit-cancel" type="button">Cancel</button><button class="button button-primary" type="submit">Update QC organism</button></div></form>
+  </section>`;
+  document.body.appendChild(backdrop);
+  const form = backdrop.querySelector("form");
+  Object.entries(savedRegistration).forEach(([name, value]) => { if (!form.elements[name] || value == null) return; if (form.elements[name].type === "checkbox") form.elements[name].checked = Boolean(value); else form.elements[name].value = value; });
+  Object.entries(saved).forEach(([name, value]) => { if (form.elements[name] && value != null) form.elements[name].value = value; });
+  backdrop.querySelector(".acceptance-edit-close").addEventListener("click", closeAcceptanceModal);
+  backdrop.querySelector(".acceptance-edit-cancel").addEventListener("click", closeAcceptanceModal);
+  backdrop.addEventListener("click", (event) => { if (event.target === backdrop) closeAcceptanceModal(); });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(form);
+    record.registration = { organism: data.get("organism"), passage: data.get("passage"), atcc: data.get("atcc"), batch: data.get("batch"), manufacturer: data.get("manufacturer"), purchaseDate: data.get("purchaseDate"), receivedDate: data.get("receivedDate"), expiryDate: data.get("expiryDate"), orderedAmount: data.get("orderedAmount"), tubeCount: data.get("tubeCount"), condition: data.get("condition"), coldChain: data.get("coldChain"), comment: data.get("comment"), storage: data.get("storage"), rack: data.get("rack"), endorsedBy: data.get("endorsedBy"), releaseToStorage: data.get("releaseToStorage") === "on" };
+    record.acceptance = { plate: data.get("plate"), description: data.get("description"), lot: data.get("lot"), observedOrganism: data.get("observedOrganism"), method: data.get("method"), bioNumber: data.get("bioNumber"), incubation: data.get("incubation"), gramStain: data.get("gramStain"), identification: data.get("identification"), performedBy: data.get("performedBy"), reviewedBy: data.get("reviewedBy"), result: data.get("result") };
+    record.name = record.registration.organism;
+    record.code = record.registration.atcc;
+    record.batch = record.registration.batch;
+    record.manufacturer = record.registration.manufacturer;
+    record.purchase = record.registration.purchaseDate ? formatDate(record.registration.purchaseDate) : record.purchase;
+    record.received = record.registration.receivedDate ? formatDate(record.registration.receivedDate) : record.received;
+    record.review = record.registration.expiryDate ? formatDate(record.registration.expiryDate) : record.review;
+    record.passage = String(record.registration.passage || record.passage).split(" ")[0].replace(/^([0-9])$/, "P$1");
+    record.tubes = `${record.registration.tubeCount} / ${record.registration.tubeCount}`;
+    record.storage = String(record.registration.storage || "").split("·")[0].trim() || record.storage;
+    record.location = record.registration.rack || record.location;
+    record.temperature = record.storage.includes("Freezer 02") ? "−20 °C" : record.storage.includes("Freezer") ? "−80 °C" : "2–8 °C";
+    const result = String(record.acceptance.result || "");
+    record.status = !record.registration.releaseToStorage ? "Pending acceptance" : result.startsWith("Pass") ? "Active" : result.startsWith("Conditional") ? "Review due" : "Quarantine";
+    persistRecords();
+    renderTable();
+    closeAcceptanceModal();
+    showToast(`QC organism ${record.id} updated successfully.`);
+  });
+  form.elements.plate.focus();
+}
+
+const acceptanceModalStyle = document.createElement("style");
+acceptanceModalStyle.textContent = `.acceptance-edit-backdrop{position:fixed;inset:0;z-index:1000;display:grid;place-items:center;padding:20px;background:rgba(20,39,57,.52)}.acceptance-edit-modal{width:min(1000px,100%);max-height:calc(100vh - 40px);overflow:auto;padding:24px;border:1px solid #d8e3ec;border-radius:14px;background:#fff;box-shadow:0 24px 65px rgba(20,45,70,.28)}.acceptance-edit-head{display:flex;justify-content:space-between;gap:18px;margin-bottom:20px}.acceptance-edit-head h2{margin:3px 0;color:#18314d;font-size:22px}.acceptance-edit-head p{margin:5px 0 0;color:#7c91a8;font-size:12px}.acceptance-edit-close{width:35px;height:35px;flex:0 0 35px;border:1px solid #d4e0ec;border-radius:8px;color:#607991;background:#fff;font-size:21px;cursor:pointer}.acceptance-edit-section{margin-top:14px;padding:18px;border:1px solid #e0e8ef;border-radius:11px;background:#fbfdff}.acceptance-edit-section:first-of-type{margin-top:0}.acceptance-edit-section h3{display:flex;align-items:center;gap:9px;margin:0 0 16px;color:#3e5872;font-size:14px}.acceptance-edit-section h3 span{width:25px;height:25px;display:grid;place-items:center;border-radius:7px;color:#1974d6;background:#e7f2fd;font-size:10px}.acceptance-edit-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}.acceptance-edit-grid .field input,.acceptance-edit-grid .field select,.acceptance-edit-grid .field textarea{width:100%;min-height:40px;padding:8px 10px;border:1px solid #d4e0ec;border-radius:8px;background:#fff;color:#526a84;font:inherit}.acceptance-edit-result{grid-column:span 2}.acceptance-edit-wide{grid-column:1/-1}.acceptance-release{grid-column:1/-1;display:flex;align-items:center;gap:9px;color:#526a84;font-size:12px;font-weight:700}.acceptance-release input{width:16px;height:16px}.acceptance-edit-note{display:flex;gap:9px;margin-top:18px;padding:11px;border-radius:8px;color:#5f7386;background:#f0f7fc;font-size:11px}.acceptance-edit-note span{width:18px;height:18px;display:grid;place-items:center;border-radius:50%;color:#fff;background:#378bc5}.acceptance-edit-note p{margin:1px 0}.acceptance-edit-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid #e2eaf1}@media(max-width:760px){.acceptance-edit-backdrop{padding:10px}.acceptance-edit-modal{padding:17px}.acceptance-edit-grid{grid-template-columns:1fr}.acceptance-edit-result,.acceptance-edit-wide{grid-column:auto}.acceptance-edit-actions{display:grid;grid-template-columns:1fr}.acceptance-edit-actions .button{width:100%}}`;
+document.head.appendChild(acceptanceModalStyle);
 
 function setView(view, recordId = state.selectedId) {
   if (view === "detail" && recordId) {
@@ -99,10 +209,10 @@ function renderTable() {
   });
   const tbody = document.getElementById("organism-rows");
   tbody.innerHTML = filtered.map((record) => `<tr>
-    <td><select class="action-select" data-record-action="${record.id}" aria-label="Actions for ${record.name}"><option value="" selected disabled hidden>Action</option><option value="acceptance">Acceptance testing</option><option value="monthly-checking">Culture Checking</option><option value="subculture">Process subculture</option><option value="storage">Storage</option><option value="qc-trail">QC Trail</option><option value="test">Test</option></select></td>
+    <td><select class="action-select" data-record-action="${record.id}" aria-label="Actions for ${record.name}"><option value="" selected disabled hidden>Action</option><option value="acceptance">Edit QC Acceptance</option><option value="test">QC Organism</option><option value="storage">Storage</option><option value="qc-trail">QC Trail</option></select></td>
     <td><strong>${record.id}</strong></td>
-    <td><strong>${record.name.replace(/\s+ATCC\s+\d+$/i, "")}</strong><small>${record.passage === "P0" ? "Original reference" : "Reference stock"}</small></td>
-    <td>${(record.name.match(/ATCC\s+\d+/i) || [record.code])[0]}</td><td>${record.batch}</td><td>${record.manufacturer}</td><td>${record.registered}</td><td>${record.purchase}</td><td>${record.received}</td><td>${record.storage}</td><td>${record.location}</td><td>${statusBadge(record.status)}</td>
+    <td><strong>${record.name}</strong><small>${record.passage === "P0" ? "Original reference" : "Reference stock"}</small></td>
+    <td>${record.batch}</td><td>${record.manufacturer}</td><td>${record.registered}</td><td>${record.purchase}</td><td>${record.received}</td><td>${record.storage}</td><td>${record.location}</td><td>${statusBadge(record.status)}</td>
   </tr>`).join("");
   document.getElementById("empty-state").classList.toggle("is-hidden", filtered.length > 0);
   document.getElementById("organism-table").classList.toggle("is-hidden", filtered.length === 0);
@@ -110,7 +220,8 @@ function renderTable() {
   tbody.querySelectorAll("[data-record-action]").forEach((select) => select.addEventListener("change", () => {
     const value = select.value;
     const id = select.dataset.recordAction;
-    if (value) setView(value, id);
+    if (value === "acceptance") openAcceptanceModal(id);
+    else if (value) setView(value, id);
     select.value = "";
   }));
 }
@@ -145,8 +256,8 @@ function formatDate(value) {
 }
 
 function exportView() {
-  const header = ["Organism ID", "Organism name", "Code", "Batch", "Manufacturer", "Registered date", "Purchase date", "Received date", "Storage", "Rack / box", "Status"];
-  const rows = state.records.map((record) => [record.id, record.name, record.code, record.batch, record.manufacturer, record.registered, record.purchase, record.received, record.storage, record.location, record.status]);
+  const header = ["Organism ID", "Organism Name", "Batch/Lot Number", "Manufacturer", "Registered date", "Purchase date", "Received date", "Storage", "Rack / box", "Status"];
+  const rows = state.records.map((record) => [record.id, record.name, record.batch, record.manufacturer, record.registered, record.purchase, record.received, record.storage, record.location, record.status]);
   const csv = [header, ...rows].map((row) => row.map((cell) => `"${String(cell).replaceAll('"', '""')}"`).join(",")).join("\n");
   const link = document.createElement("a");
   link.href = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));

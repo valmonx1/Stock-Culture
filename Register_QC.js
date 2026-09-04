@@ -54,7 +54,7 @@ function setView(view, recordId = state.selectedId) {
   state.currentView = view;
   document.querySelectorAll("[data-view-panel]").forEach((panel) => panel.classList.toggle("is-visible", panel.dataset.viewPanel === view));
   document.querySelectorAll(".nav-item[data-view]").forEach((item) => item.classList.toggle("is-active", item.dataset.view === view));
-  const labels = { dashboard: "QC organisms", register: "Register QC organism", detail: "Organism record", acceptance: "Acceptance testing", storage: "Storage map", passages: "Passage log", subculture: "Process subculture", usage: "Usage & disposal" };
+  const labels = { dashboard: "QC organisms", register: "Registration of QC Organism", detail: "Organism record", acceptance: "Acceptance testing", storage: "Storage map", passages: "Passage log", subculture: "Process subculture", usage: "Usage & disposal" };
   document.getElementById("breadcrumb-current").textContent = labels[view] || "QC organisms";
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
@@ -116,7 +116,7 @@ function renderTable() {
 function handleRegister(event) {
   event.preventDefault();
   const form = event.currentTarget;
-  const required = [...form.querySelectorAll("[name][required], [name]")].filter((field) => ["organismId", "organism", "passage", "atcc", "batch", "manufacturer", "purchaseDate", "receivedDate", "plate", "plateLot", "method", "acceptanceResult", "orderedAmount", "tubeCount", "condition"].includes(field.name));
+  const required = [...form.querySelectorAll("[name][required], [name]")].filter((field) => ["organismId", "passage", "atcc", "batch", "manufacturer", "purchaseDate", "receivedDate", "plate", "plateLot", "method", "kitLotNumber", "kitExpiryDate", "expectedResult", "testStatus", "acceptanceResult", "stockCulturePrepared", "orderedAmount", "tubeCount", "condition"].includes(field.name));
   const missing = required.filter((field) => !field.value.trim());
   if (missing.length) {
     missing[0].focus();
@@ -124,9 +124,13 @@ function handleRegister(event) {
     return;
   }
   const data = new FormData(form);
+  // The registration form no longer collects an organism name.
+  data.set("organism", "Not specified");
   const nextId = `QC-2026-${String(state.records.length + 11).padStart(3, "0")}`;
   const storageText = data.get("storage").split("·")[0].trim();
-  const record = { id: nextId, name: data.get("organism"), code: data.get("atcc"), batch: data.get("batch"), manufacturer: data.get("manufacturer"), registered: "27 Jul 2026", purchase: formatDate(data.get("purchaseDate")), received: formatDate(data.get("receivedDate")), storage: storageText, location: data.get("rack"), status: data.get("releaseToStorage") ? "Active" : "Pending acceptance", passage: (data.get("passage") || "P0").split(" ")[0], tubes: `${data.get("tubeCount")} / ${data.get("tubeCount")}`, temperature: storageText.includes("Freezer") ? (storageText.includes("02") ? "−20 °C" : "−80 °C") : "2–8 °C", review: data.get("expiryDate") ? formatDate(data.get("expiryDate")) : "To be reviewed" };
+  const acceptance = { plate: data.get("plate"), description: data.get("plateDescription"), lot: data.get("plateLot"), observedOrganism: data.get("observedOrganism"), method: data.get("method"), bioNumber: data.get("bioNumber"), incubation: data.get("incubationDescription"), gramStain: data.get("gramStain"), kitLotNumber: data.get("kitLotNumber"), kitExpiryDate: data.get("kitExpiryDate"), expectedResult: data.get("expectedResult"), status: data.get("testStatus"), result: data.get("acceptanceResult"), stockCulturePrepared: Number(data.get("stockCulturePrepared")) };
+  const registration = { organism: data.get("organism"), passage: data.get("passage"), atcc: data.get("atcc"), batch: data.get("batch"), manufacturer: data.get("manufacturer"), purchaseDate: data.get("purchaseDate"), receivedDate: data.get("receivedDate"), expiryDate: data.get("expiryDate"), orderedAmount: data.get("orderedAmount"), tubeCount: data.get("tubeCount"), condition: data.get("condition"), comment: data.get("comment"), storage: data.get("storage"), rack: data.get("rack"), releaseToStorage: data.get("releaseToStorage") === "on" };
+  const record = { id: nextId, name: data.get("organism"), code: data.get("atcc"), batch: data.get("batch"), manufacturer: data.get("manufacturer"), registered: "27 Jul 2026", purchase: formatDate(data.get("purchaseDate")), received: formatDate(data.get("receivedDate")), storage: storageText, location: data.get("rack"), status: data.get("releaseToStorage") ? "Active" : "Pending acceptance", passage: (data.get("passage") || "P0").split(" ")[0], tubes: `${data.get("tubeCount")} / ${data.get("tubeCount")}`, temperature: storageText.includes("Freezer") ? (storageText.includes("02") ? "−20 °C" : "−80 °C") : "2–8 °C", review: data.get("expiryDate") ? formatDate(data.get("expiryDate")) : "To be reviewed", acceptance, registration };
   state.records = [record, ...state.records];
   state.selectedId = record.id;
   persistRecords();

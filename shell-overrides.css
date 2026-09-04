@@ -54,3 +54,119 @@ body { background: #f7f7f7; }
   .main-content { padding-bottom: 0; }
   .main-content::after { position: static; min-height: 34px; padding: 8px 12px; content: "Copyright © 2026 LIS STRATEQ. All rights reserved."; white-space: normal; }
 }
+
+/* Responsive layout system shared by every LIS page. */
+html { overflow-x: hidden; }
+body { min-width: 320px; overflow-x: hidden; }
+img, svg, video, canvas { max-width: 100%; height: auto; }
+input, select, textarea, button { max-width: 100%; }
+.main-content, .page-container, .view, .card, .table-card,
+.entry-page, .entry-workspace, .monthly-page, .qc-trail-page,
+.storage-main, .storage-card { min-width: 0; }
+.table-wrap { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; -webkit-overflow-scrolling: touch; }
+.data-table, .table-wrap table { width: 100%; }
+
+/* Standard desktop and laptop screens (1280-1600px). */
+@media (max-width: 1440px) {
+  .sidebar { width: 248px; flex-basis: 248px; }
+  .main-content::after { left: 248px; }
+  .page-container { max-width: none; padding-right: 18px; padding-left: 18px; }
+  .module-card-grid { grid-template-columns: repeat(3, minmax(170px, 1fr)); }
+  .entry-page, .qc-trail-page, .storage-main { max-width: none; padding-right: 20px; padding-left: 20px; }
+  .entry-layout { grid-template-columns: minmax(230px, 28%) minmax(0, 1fr); }
+}
+
+/* Compact laptops and landscape tablets. */
+@media (max-width: 1180px) {
+  .sidebar { width: 210px; flex-basis: 210px; }
+  .main-content::after { left: 210px; }
+  .workspace-picker { min-height: 72px; padding: 14px 12px 10px 70px; }
+  .workspace-picker::before { top: 10px; left: 10px; width: 52px; height: 52px; }
+  .nav-item { font-size: 13px; }
+  .page-container { padding-right: 14px; padding-left: 14px; }
+  .page-heading h1, .entry-titlebar h1 { font-size: clamp(25px, 3vw, 31px); }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .form-grid, .usage-grid { grid-template-columns: 1fr; }
+  .detail-layout, .storage-layout { grid-template-columns: 1fr; }
+  .detail-aside { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .entry-layout { grid-template-columns: minmax(210px, 30%) minmax(0, 1fr); }
+  .entry-tabs { gap: 8px; overflow-x: auto; white-space: nowrap; }
+  .subculture-results { position: static !important; width: auto !important; height: auto !important; margin: 16px !important; overflow: visible !important; }
+  .storage-main { padding-top: 24px; }
+}
+
+/* Tablet and narrow laptop windows. */
+@media (max-width: 900px) {
+  .app-shell { display: block; }
+  .sidebar { width: 100%; min-height: auto; padding-bottom: 0; }
+  .brand-lockup { height: 44px; }
+  .workspace-picker, .sidebar-footer, .nav-label { display: none; }
+  .sidebar-nav { flex-direction: row; overflow-x: auto; overscroll-behavior-inline: contain; }
+  .nav-item { width: auto; min-width: max-content; flex: 0 0 auto; padding: 0 14px; }
+  .nav-item.is-active { box-shadow: inset 0 -3px 0 #51b6b0; }
+  .nav-count { display: none; }
+  .main-content { min-height: calc(100vh - 44px); padding-bottom: 0; }
+  .main-content::after { position: static; min-height: 34px; padding: 8px 12px; content: "Copyright © 2026 LIS STRATEQ. All rights reserved.  Version 1.0.12"; white-space: normal; }
+  .topbar { min-height: 42px; height: auto; padding: 7px 14px; }
+  .topbar-actions::before { font-size: 12px; white-space: nowrap; }
+  .page-container { padding: 0 12px 28px; }
+  .module-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .entry-page, .qc-trail-page, .storage-main { padding: 20px 12px 36px; }
+  .entry-layout { grid-template-columns: 1fr; }
+  .entry-filter { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px; }
+  .entry-filter h2 { grid-column: 1 / -1; margin-bottom: 0; }
+  .entry-filter .full-width { width: auto; margin: 0; }
+  .three-columns, .two-columns, .entry-subculture-grid, .entry-form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .field-span-2 { grid-column: 1 / -1; }
+  .storage-summary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .box-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .queue-grid { grid-template-columns: 1fr; }
+  .filter-bar { flex-wrap: wrap; }
+  .search-field { flex: 1 1 100%; }
+  .filter-field { flex: 1 1 180px; }
+}
+
+/* Phones and very narrow windows. */
+@media (max-width: 620px) {
+  .brand-lockup { padding-right: 12px; padding-left: 12px; }
+  .topbar { align-items: center; }
+  .breadcrumbs { min-width: 0; font-size: 14px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .topbar-actions::before { content: "⚙  👤"; font-size: 15px; }
+  .page-container { padding-right: 10px; padding-left: 10px; }
+  .page-heading, .entry-titlebar { display: block; }
+  .page-heading > .button, .page-heading > .status-badge,
+  .entry-titlebar > .button { width: 100%; margin-top: 14px; }
+  .module-card-grid { grid-template-columns: 1fr; gap: 10px; padding-right: 4px; padding-left: 4px; }
+  .metric-grid, .storage-summary, .detail-stats,
+  .three-columns, .two-columns, .entry-subculture-grid,
+  .entry-form-grid, .subculture-extra-grid { grid-template-columns: 1fr; }
+  .field-span-2 { grid-column: auto; }
+  .form-section, .monthly-card, .storage-card, .trail-card,
+  .trail-summary { padding: 16px; }
+  .section-heading { flex-wrap: wrap; }
+  .section-heading .required-note, .section-heading > .result-pill { margin-left: 38px; }
+  .form-actions, .monthly-card .form-actions { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .form-actions > div { display: grid; grid-template-columns: 1fr; gap: 8px; margin-top: 0; }
+  .form-actions .button, .monthly-card .form-actions .button { width: 100%; margin: 0; }
+  .entry-filter { display: block; }
+  .entry-filter h2 { margin-bottom: 14px; }
+  .entry-filter .full-width { width: 100%; margin-top: 10px; }
+  .entry-workspace-head { gap: 8px; flex-wrap: wrap; }
+  .entry-tabs { padding: 10px 8px; }
+  .entry-result-row { padding: 12px; }
+  .box-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 14px; }
+  .rack-tabs { gap: 16px; overflow-x: auto; }
+  .storage-flow { overflow-x: auto; justify-content: flex-start; }
+  .storage-flow .flow-item { min-width: max-content; }
+  .storage-flow i { min-width: 22px; flex: 0 0 22px; }
+  .trail-item { gap: 11px; }
+  .trail-marker { width: 32px; height: 32px; flex-basis: 32px; }
+  .trail-summary > .status-badge { margin-left: 0; }
+  .toast { right: 10px; bottom: 10px; left: 10px; max-width: none; }
+}
+
+@media (max-width: 380px) {
+  .box-grid { grid-template-columns: 1fr; }
+  .page-container, .entry-page, .qc-trail-page, .storage-main { padding-right: 8px; padding-left: 8px; }
+  .card { border-radius: 9px; }
+}

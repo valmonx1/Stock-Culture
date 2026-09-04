@@ -1,1 +1,92 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Entry · Microbiology LIS</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="Entry.css"><link rel="stylesheet" href="shell-overrides.css"></head><body><div class="app-shell"><aside class="sidebar" aria-label="Primary navigation"><div class="brand-lockup"><div class="brand-mark">MC</div><div><div class="brand-title">Microbiology</div><div class="brand-subtitle">Laboratory information system</div></div></div><div class="workspace-picker"><span class="eyebrow">Current workspace</span><strong>Quality control</strong><span class="workspace-status"><span class="status-dot"></span> Live mockup data</span></div><nav class="sidebar-nav"><span class="nav-label">Module</span><button class="nav-item is-active" type="button" data-module="microbiology"><span>Microbiology</span></button></nav><div class="sidebar-footer"><div class="safety-callout"><span class="safety-icon">!</span><div><strong>Traceability first</strong><span>Every entry remains linked to the QC record.</span></div></div></div></aside><main class="main-content"><header class="topbar"><div class="breadcrumbs"><span>Microbiology</span><span class="crumb-separator">/</span><strong>Entry</strong></div><div class="topbar-actions"><span class="environment-pill"><span class="status-dot"></span> Local mockup</span></div></header><div class="page-container"><section class="entry-page"><div class="entry-titlebar"><div><span class="eyebrow accent-eyebrow">Microbiology entry</span><h1>Entry</h1><p>Enter and verify laboratory test information for the selected QC record.</p></div><button class="button button-secondary" type="button" id="entry-close">Close</button></div><div class="entry-layout"><aside class="card entry-filter"><h2>Filter</h2><label class="field"><span>Lab number</span><div class="filter-row"><input value="" placeholder="Enter lab number"><button class="button button-primary" type="button">⌕</button></div></label><button class="button button-ghost full-width" type="button">More Filter</button></aside><section class="card entry-workspace"><div class="entry-workspace-head"><span class="status-badge status-active">✓ VERIFY</span><button class="button button-ghost" type="button">Comment</button></div><div class="entry-tabs"><button class="is-active" type="button">Microscopic and Culture</button><button type="button">Plate's</button><button type="button">Identification</button><button type="button">Organism</button><button type="button">Sensitivity</button></div><div class="entry-empty"><strong>Entry workspace</strong><p>Select a test from the list to begin entering results.</p></div></section></div><section class="card entry-tests"><h2>Test's</h2><table><thead><tr><th>Test name</th><th>Result</th></tr></thead><tbody><tr><td>Culture Blood Aerobe</td><td></td></tr><tr><td>Gram Stain Blood Aerobe</td><td></td></tr><tr><td>Culture Blood Anaerobe</td><td>Growth.</td></tr><tr><td>Gram Stain Blood Anaerobe</td><td></td></tr></tbody></table></section></section></div></main></div><script src="shell-overrides.js"></script><script src="Entry.js?v=20260821-27"></script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entry · Microbiology LIS</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shell-overrides.css">
+  <link rel="stylesheet" href="Entry.css?v=20260827">
+  <script src="shell-overrides.js" defer></script>
+  <script src="Entry-export.js?v=20260827" defer></script>
+  <script src="Entry.js?v=20260827" defer></script>
+</head>
+<body class="entry-screen">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand-lockup"><div class="brand-mark" aria-hidden="true">MC</div><div><div class="brand-title">Microbiology</div><div class="brand-subtitle">Laboratory information system</div></div></div>
+      <div class="workspace-picker"><span class="eyebrow">Current workspace</span><strong>Quality control</strong><span class="workspace-status">Live mockup data</span></div>
+      <nav class="sidebar-nav" aria-label="Modules"><button class="nav-item is-active" type="button" data-module="microbiology">Microbiology</button></nav>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div class="breadcrumbs"><span>Microbiology</span><span class="crumb-separator">/</span><strong id="breadcrumb-current">Entry</strong></div><div class="topbar-actions"></div></header>
+      <div class="page-container entry-main">
+    <div class="entry-heading"><div><span class="entry-eyebrow">Microbiology entry</span><h1>QC Culture Collection Record Sheet</h1></div><a class="button button-secondary" href="index.html">Close</a></div>
+    <p class="entry-error" id="entry-error" role="alert" hidden></p>
+    <section class="entry-card entry-summary" aria-label="Selected QC organism">
+      <div><span>Organism Name</span><strong id="qc-name">—</strong></div>
+      <div><span>Organism ID</span><strong id="qc-id">—</strong></div>
+      <div><span>Batch / Lot Number</span><strong id="qc-batch">—</strong></div>
+    </section>
+    <section class="entry-card entry-editor" aria-label="QC workflow">
+      <div class="entry-tabbar" role="tablist" aria-label="QC workflow">
+        <button type="button" role="tab" id="culture-tab" aria-controls="entry-panel" aria-selected="true" data-mode="culture">Monthly Checking</button>
+        <button type="button" role="tab" id="subculture-tab" aria-controls="entry-panel" aria-selected="false" tabindex="-1" data-mode="subculture">Working Culture</button>
+        <button type="button" role="tab" id="weekly-tab" aria-controls="entry-panel" aria-selected="false" tabindex="-1" data-mode="weekly">Weekly Culture</button>
+      </div>
+      <div id="entry-panel" role="tabpanel" aria-labelledby="culture-tab">
+        <form id="entry-form">
+          <fieldset id="entry-fields" disabled>
+            <div class="entry-input-grid">
+              <section class="entry-field-group entry-field-group-source" aria-labelledby="entry-group-source"><h3 id="entry-group-source"><span>01</span>Source culture</h3><div class="entry-field-group-grid" id="entry-source-group-grid">
+                <label class="entry-field" data-passage-field><span id="entry-passage-label">Passage (Monthly) <em>*</em></span><select name="passage" required><option value="">Select passage</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label>
+                <label class="entry-field" data-source-field><span>Source tube / (Stock Culture Vial) <em>*</em></span><select name="vial" required><option value="">Select vial</option></select></label>
+                <label class="entry-field" data-weekly-passage-field hidden><span>Passage Weekly <em>*</em></span><select name="weeklyPassage" required disabled><option value="">Select weekly passage</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label>
+              </div></section>
+              <section class="entry-field-group entry-field-group-automated" data-monthly-confirmation aria-labelledby="entry-group-automated"><h3 id="entry-group-automated"><span>02</span>Automated Identification</h3><div class="entry-confirmation-card">
+                <label class="entry-field"><span>Organism name observed</span><select name="observedOrganism"><option value="">Select result</option><option>Matches certificate</option><option>Does not match certificate</option><option>Not performed</option></select></label>
+                <label class="entry-field"><span>Method identification <em>*</em></span><select name="methodIdentification" required><option value="">Select method</option><option>Biochemical identification</option><option>MALDI-TOF</option><option>Microscopy &amp; staining</option><option>Reference certificate only</option></select></label>
+                <label class="entry-field"><span>Bio number</span><input name="bioNumber" placeholder="e.g. BIO-8841" maxlength="120"></label>
+              </div></section>
+              <section class="entry-field-group entry-field-group-test" aria-labelledby="entry-group-test"><h3 id="entry-group-test"><span id="entry-group-test-number">03</span>Identification test</h3><div class="entry-field-group-grid">
+                <label class="entry-field entry-primary-identification" data-identification-field><span>Identification Test <em>*</em></span><select name="test" required><option value="">Select identification</option></select></label>
+                <label class="entry-field" data-weekly-media-field hidden><span>Media <em>*</em></span><select name="media" required disabled><option value="">Select media</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option><option>MacConkey agar</option><option>Sabouraud dextrose agar</option></select></label>
+                <label class="entry-field" data-lot-field><span id="entry-lot-label">Kit Lot Number <em>*</em></span><input name="lot" placeholder="Enter kit lot number" maxlength="120" required></label>
+                <label class="entry-field"><span id="entry-expiry-label">Kit Expiry Date <em>*</em></span><input name="expiry" type="date" required></label>
+                <label class="entry-field" data-identification-field><span>Expected Result <em>*</em></span><select name="expected" required disabled><option value="">Select identification test first</option></select></label>
+                <label class="entry-field" data-status-field><span>Status <em>*</em></span><select name="performance" required><option value="">Select status</option><option>Pass</option><option>Fail</option></select></label>
+                <label class="entry-field" data-weekly-field hidden><span>Date Prepared <em>*</em></span><input name="datePrepared" type="date" required disabled></label>
+                <label class="entry-field" data-weekly-field hidden><span>Date Discarded <em>*</em></span><input name="dateDiscarded" type="date" required disabled></label>
+              </div></section>
+              <section class="entry-field-group entry-field-group-prepared" aria-labelledby="entry-group-prepared"><h3 id="entry-group-prepared"><span id="entry-group-prepared-number">04</span>Prepared culture</h3><div class="entry-field-group-grid" id="entry-prepared-group-grid">
+                <label class="entry-field" data-prepared-field><span id="entry-prepared-label">Number of Working Culture Prepared (Slant) <em>*</em></span><input name="quantity" type="number" min="1" step="1" placeholder="Enter quantity" required></label>
+              </div></section>
+            </div>
+            <div class="entry-form-footer"><span id="entry-form-note">Complete all required fields before saving.</span><button class="button button-primary" type="submit"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M5 3h12l4 4v14H3V3h2Z"/><path d="M7 3v6h10V3M7 21v-8h10v8"/></svg>Save</button></div>
+          </fieldset>
+        </form>
+      </div>
+    </section>
+    <section class="entry-card entry-results is-collapsed" aria-labelledby="results-title">
+      <div class="entry-results-heading"><div><span class="entry-eyebrow">Recorded results</span><h2 id="results-title">Monthly Checking</h2></div><div class="entry-results-tools"><label class="entry-status-filter">Status<select id="entry-status-filter"><option value="all">All statuses</option><option value="Saved">Saved</option><option value="Performed">Performed</option><option value="Reviewed">Reviewed</option><option value="Endorsed">Endorsed</option></select></label><span id="entry-count" aria-live="polite">0 records</span><button type="button" id="entry-export" class="button button-secondary" title="Download list as Excel" aria-label="Download list as Excel"><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="8" y="3" width="14" height="18" rx="2" fill="#21a366"/><path d="M13 7h6M13 12h6M13 17h6M16 5v14" stroke="#fff" stroke-opacity=".65"/><rect x="1" y="6" width="13" height="13" rx="2" fill="#107c41"/><path d="m5 9 5 7m0-7-5 7" stroke="#fff" stroke-width="1.8"/></svg></button><button type="button" id="entry-list-action" class="button button-secondary" title="Action" aria-label="Action"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m5 12 4 4L19 6"/></svg></button></div><button type="button" id="entry-results-toggle" class="entry-results-toggle" aria-expanded="false" aria-controls="entry-results-table" aria-label="Expand recorded results" title="Expand recorded results">+</button></div>
+      <div class="entry-table-scroll" id="entry-results-table" tabindex="0" role="region" aria-label="Saved results table">
+        <table class="entry-table">
+          <thead><tr id="entry-results-head"></tr></thead>
+          <tbody id="entry-rows"></tbody>
+        </table>
+      </div>
+    </section>
+      </div>
+  <footer class="entry-footer">Copyright © 2026 LIS STRATEQ. All rights reserved.<span>Local mockup · Entry</span></footer>
+    </main>
+  </div>
+  <div class="entry-notice" id="entry-notice" role="status" aria-live="polite" hidden></div>
+  <div class="entry-action-backdrop" id="entry-action-modal" hidden>
+    <section class="entry-action-modal" role="dialog" aria-modal="true" aria-labelledby="entry-action-title">
+      <div class="entry-action-head"><div><span class="entry-eyebrow">Bulk action</span><h2 id="entry-action-title">Update selected records</h2><p>Select one or more rows before applying an action.</p></div><button type="button" id="entry-action-close" aria-label="Close">×</button></div>
+      <div class="entry-action-table-scroll"><table class="entry-action-table"><thead><tr><th class="entry-check-column"><input type="checkbox" id="entry-action-check-all" aria-label="Select all records"></th><th id="entry-action-id-heading">Monthly QC ID</th><th>Source Tube</th><th>Identification Test</th><th>Expected Result</th><th>Status</th></tr></thead><tbody id="entry-action-rows"></tbody></table></div>
+      <div class="entry-action-footer"><span id="entry-action-selection" aria-live="polite">0 selected</span><div><button class="button action-performed" type="button" data-bulk-action="performed">Performed</button><button class="button action-reviewed" type="button" data-bulk-action="reviewed">Reviewed</button><button class="button action-endorsed" type="button" data-bulk-action="endorsed">Endorsed</button></div></div>
+    </section>
+  </div>
+</body>
+</html>

@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <button class="nav-item" type="button"><span class="nav-icon">&gt;</span><span>Sign Out</span></button>`;
 
   const isQcOrganismPage = /(^|[\\/])index\.html$/i.test(window.location.pathname) || window.location.pathname === '';
+  const isMainPage = /(^|[\\/])Main_Page\.html$/i.test(window.location.pathname);
   nav.querySelectorAll('.nav-item').forEach((item) => item.classList.toggle('is-active', item.dataset.module === 'microbiology'));
 
   const pageContainer = document.querySelector('.page-container');
@@ -42,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (actionTrigger && actionTrigger.value === 'monthly-checking') { event.preventDefault(); event.stopPropagation(); window.location.href = 'Monthly_Checking.html?record=' + encodeURIComponent(actionTrigger.dataset.recordAction || ''); }
       if (actionTrigger && actionTrigger.value === 'storage') { event.preventDefault(); event.stopPropagation(); window.location.href = 'Storage.html?record=' + encodeURIComponent(actionTrigger.dataset.recordAction || ''); }
       if (actionTrigger && actionTrigger.value === 'qc-trail') { event.preventDefault(); event.stopPropagation(); window.location.href = 'QC_Trail.html?record=' + encodeURIComponent(actionTrigger.dataset.recordAction || ''); }
-      if (actionTrigger && actionTrigger.value === 'test') { event.preventDefault(); event.stopPropagation(); window.location.href = 'Entry.html?record=' + encodeURIComponent(actionTrigger.dataset.recordAction || ''); }
+      if (actionTrigger && actionTrigger.value === 'test') { event.preventDefault(); event.stopPropagation(); const selectedId = actionTrigger.dataset.recordAction || ''; actionTrigger.value = ''; window.location.href = 'Entry.html?record=' + encodeURIComponent(selectedId); }
     }, true);
   }
   const submenu = `
@@ -58,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="module-card" type="button"><span class="module-card-icon">&gt;</span><span><strong>Print Barcode and Label</strong><em>6009 – Print Barcode and Label</em></span></button>
         <button class="module-card" type="button"><span class="module-card-icon">&gt;</span><span><strong>WHONET</strong><em>6010 – WHONET</em></span></button>
         <button class="module-card module-card-primary" type="button" data-open-qc><span class="module-card-icon">M</span><span><strong>QC Organism</strong><em>Stock culture control</em></span></button>
+        <button class="module-card module-card-primary" type="button" data-open-qc-media><span class="module-card-icon">M</span><span><strong>QC Media</strong><em>Culture media control</em></span></button>
       </div>
     </section>`;
   const showSubmenu = () => {
@@ -66,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const crumb = document.querySelector('#breadcrumb-current');
     if (crumb) crumb.textContent = 'MICRO';
     pageContainer.querySelectorAll('[data-open-qc]').forEach((button) => button.addEventListener('click', () => { window.location.href = 'index.html'; }));
+    pageContainer.querySelectorAll('[data-open-qc-media]').forEach((button) => button.addEventListener('click', () => { window.location.href = 'QC_Media.html'; }));
   };
   const showDashboard = () => {
     pageContainer.innerHTML = originalPage;
@@ -77,7 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const crumb = document.querySelector('#breadcrumb-current');
     if (crumb) crumb.textContent = label;
   };
-  nav.querySelector('[data-module="microbiology"]').addEventListener('click', showSubmenu);
+  nav.querySelector('[data-module="microbiology"]').addEventListener('click', () => {
+    if (isMainPage) showSubmenu();
+    else window.location.href = 'Main_Page.html';
+  });
   nav.querySelector('[data-dashboard]').addEventListener('click', () => showUnavailable('Dashboard'));
   nav.querySelectorAll('.nav-item:not([data-view]):not([data-module])').forEach((item) => item.addEventListener('click', () => showUnavailable(item.textContent.trim())));
+  if (isMainPage) showSubmenu();
 });

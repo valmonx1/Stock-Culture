@@ -168,69 +168,77 @@
 
         <section class="view" id="view-register" data-view-panel="register">
           <div class="page-heading register-heading">
-            <div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Controlled intake</span><h1>Register QC organism</h1><p>Complete the four checkpoints before the organism is released to storage.</p></div>
+            <div><button class="back-link" type="button" data-view="dashboard">← Back to QC organisms</button><span class="eyebrow accent-eyebrow">Controlled intake</span><h1>Registration of QC Organism</h1><p>Complete the three checkpoints before the organism is released to storage.</p></div>
             <div class="heading-status"><span class="draft-pill"><span class="status-dot status-dot-amber"></span> Draft record</span><span class="record-reference">Next ID <strong>QC-2026-013</strong></span></div>
           </div>
 
-          <div class="stepper" aria-label="Registration progress"><div class="stepper-item is-active"><span>1</span><strong>Identification</strong></div><div class="stepper-line"></div><div class="stepper-item"><span>2</span><strong>Acceptance</strong></div><div class="stepper-line"></div><div class="stepper-item"><span>3</span><strong>Inspection</strong></div><div class="stepper-line"></div><div class="stepper-item"><span>4</span><strong>Storage</strong></div></div>
-
           <form id="register-form" novalidate>
             <div class="form-grid form-grid-top">
-              <section class="card form-section" data-step="1">
-                <div class="section-heading"><div class="section-number">01</div><div><span class="eyebrow">Source &amp; identity</span><h2>Organism identification</h2><p>Capture the traceable identity exactly as shown on the certificate.</p></div><span class="required-note">* Required</span></div>
+              <section class="card form-section collection-card" data-step="1">
+                <div class="section-heading"><div class="section-number">01</div><div><span class="eyebrow">Source &amp; identity</span><h2>Culture Collection</h2><p>Capture the traceable identity exactly as shown on the certificate.</p></div><span class="required-note">* Required</span></div>
                 <div class="form-fields three-columns">
+                  <h3 class="collection-group-heading">Source &amp; traceability</h3>
                   <label class="field"><span>Organism ID <em>*</em></span><input name="organismId" value="QC-2026-013" readonly /></label>
-                  <label class="field"><span>QC organism <em>*</em></span><select name="organism"><option value="">Select organism</option><option>Escherichia coli ATCC 25922</option><option>Staphylococcus aureus ATCC 29213</option><option>Enterococcus faecalis ATCC 29212</option><option>Pseudomonas aeruginosa ATCC 27853</option></select></label>
-                  <label class="field"><span>Passage number <em>*</em></span><select name="passage"><option value="">Select passage</option><option>0 · Original reference</option><option>1 · Reference stock</option><option>2 · Working stock</option><option>3 · Working stock</option></select></label>
                   <label class="field"><span>ATCC <em>*</em></span><input name="atcc" placeholder="e.g. ATCC 25922" /></label>
                   <label class="field"><span>Batch / lot <em>*</em></span><input name="batch" placeholder="e.g. 25922-2026-A" /></label>
-                  <label class="field"><span>Manufacturer / source <em>*</em></span><input name="manufacturer" placeholder="e.g. ATCC" /></label>
+                  <label class="field"><span>Passage number <em>*</em></span><select name="passage"><option value="">Select passage</option><option>P1</option><option>P2</option><option>P3</option><option>P4</option></select></label>
+                  <label class="field"><span>Manufacturer / source <em>*</em></span><select name="manufacturer"><option value="">Select manufacturer / source</option><option>Company A</option><option>Company B</option><option>Company C</option></select></label>
                   <label class="field"><span>Purchase date <em>*</em></span><input name="purchaseDate" type="date" /></label>
                   <label class="field"><span>Received date <em>*</em></span><input name="receivedDate" type="date" /></label>
                   <label class="field"><span>Expiry / review date</span><input name="expiryDate" type="date" /></label>
+                  <div class="collection-receipt-card" role="group" aria-labelledby="collection-receipt-heading">
+                  <h3 class="collection-group-heading" id="collection-receipt-heading">Receipt &amp; condition</h3>
+                  <label class="field collection-row-start"><span>Ordered amount <em>*</em></span><input name="orderedAmount" type="number" min="1" placeholder="e.g. 10" /></label>
+                  <label class="field"><span class="truncated-field-label"><span title="Number of tubes / loops per batch">Number of tubes / loops per batch</span><em>*</em></span><input name="tubeCount" type="number" min="1" placeholder="e.g. 10" /></label>
+                  <label class="field"><span>Condition of package / tube <em>*</em></span><select name="condition"><option value="">Select condition</option><option>Intact — no deviation</option><option>Minor packaging damage</option><option>Temperature excursion</option><option>Leak / contamination suspected</option></select></label>
+                  <label class="field field-span-2"><span>Inspection comment</span><textarea name="comment" rows="4" placeholder="Describe any receipt observation, deviation or corrective action."></textarea></label>
+                  </div>
                 </div>
+                <h3 class="collection-group-heading collection-attachment-heading">Supporting document</h3>
+                <label class="upload-zone" for="certificate-file"><span class="upload-glyph">↑</span><span><strong>Upload birth / authenticity certificate</strong><small>PDF only · max 10 MB · click to attach a mock file</small></span><span class="upload-action">Choose file</span><input id="certificate-file" name="certificate" type="file" accept="application/pdf" /></label>
+                <div class="file-chip is-hidden" id="selected-file"><span>PDF</span><strong></strong><button type="button" aria-label="Remove file" id="remove-file">×</button></div>
               </section>
 
-              <section class="card form-section" data-step="2">
-                <div class="section-heading"><div class="section-number">02</div><div><span class="eyebrow">Identity confirmation</span><h2>Acceptance testing</h2><p>Record the test method and acceptance decision.</p></div><span class="result-pill result-pill-pending">Pending</span></div>
+              <section class="card form-section purity-test-card" data-step="2">
+                <div class="section-heading"><div class="section-number">02</div><div><span class="eyebrow">Identity confirmation</span><h2>Purity and Confirmation Test</h2><p>Record the test method and acceptance decision.</p></div><span class="result-pill result-pill-pending">Pending</span></div>
                 <div class="form-fields two-columns">
-                  <label class="field"><span>Plate / media <em>*</em></span><select name="plate"><option value="">Select media</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option><option>MacConkey agar</option><option>Sabouraud dextrose agar</option></select></label>
+                  <h3 class="purity-group-heading">Media preparation</h3>
+                  <label class="field"><span>Purity Media <em>*</em></span><select name="plate"><option value="">Select media</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option><option>MacConkey agar</option><option>Sabouraud dextrose agar</option></select></label>
                   <label class="field"><span>Description</span><input name="plateDescription" placeholder="Free-text description" /></label>
-                  <label class="field"><span>Lot number <em>*</em></span><input name="plateLot" placeholder="e.g. MHA-26-041" /></label>
-                  <label class="field"><span>Organism name observed</span><select name="observedOrganism"><option value="">Select result</option><option>Matches certificate</option><option>Does not match certificate</option><option>Not performed</option></select></label>
-                  <label class="field"><span>Method identification <em>*</em></span><select name="method"><option value="">Select method</option><option>Biochemical identification</option><option>MALDI-TOF</option><option>Microscopy &amp; staining</option><option>Reference certificate only</option></select></label>
-                  <label class="field"><span>Bio number</span><input name="bioNumber" placeholder="e.g. BIO-8841" /></label>
+                  <label class="field"><span>Lot Number of Media <em>*</em></span><input name="plateLot" placeholder="e.g. MHA-26-041" /></label>
+                  <div class="acceptance-identification-card" role="group" aria-label="Organism identification details">
+                    <h3 class="purity-group-heading">Organism confirmation</h3>
+                    <label class="field"><span>Organism name observed</span><select name="observedOrganism"><option value="">Select result</option><option>Matches certificate</option><option>Does not match certificate</option><option>Not performed</option></select></label>
+                    <label class="field"><span>Method identification <em>*</em></span><select name="method"><option value="">Select method</option><option>Biochemical identification</option><option>MALDI-TOF</option><option>Microscopy &amp; staining</option><option>Reference certificate only</option></select></label>
+                    <label class="field"><span>Bio number</span><input name="bioNumber" placeholder="e.g. BIO-8841" /></label>
+                  </div>
+                  <h3 class="purity-group-heading purity-group-divider">Test findings</h3>
+                  <label class="field"><span>Minimal Biochemical Test</span><select name="gramStain"><option value="">Select result</option><option>Gram positive</option><option>Gram negative</option><option>Not performed</option></select></label>
+                  <label class="field"><span>Kit Lot Number <em>*</em></span><input name="kitLotNumber" placeholder="Enter kit lot number" required /></label>
+                  <label class="field"><span>Kit Expiry Date <em>*</em></span><input name="kitExpiryDate" type="date" required /></label>
+                  <label class="field"><span>Expected Result <em>*</em></span><select name="expectedResult" required><option value="">Select expected result</option><option>Confirmed</option><option>Presumptive</option><option>Not identified</option></select></label>
                   <label class="field"><span>Incubation description</span><select name="incubationDescription"><option value="">Select incubation</option><option>35–37 °C for 18–24 hours</option><option>35–37 °C for 24–48 hours</option><option>Room temperature</option><option>Other condition</option></select></label>
-                  <label class="field"><span>Gram stain</span><select name="gramStain"><option value="">Select result</option><option>Gram positive</option><option>Gram negative</option><option>Not performed</option></select></label>
-                  <label class="field"><span>Identification</span><select name="identification"><option value="">Select identification</option><option>Confirmed</option><option>Presumptive</option><option>Not identified</option></select></label>
-                  <label class="field"><span>Performed by</span><select name="acceptancePerformedBy"><option value="">Select user</option><option>Sarah A.</option><option>Dr. Amir R.</option><option>Nurul H.</option></select></label>
-                  <label class="field"><span>Reviewed by</span><select name="acceptanceReviewedBy"><option value="">Select reviewer</option><option>Dr. Amir R.</option><option>Dr. Mei L.</option><option>Sarah A.</option></select></label>
-                  <label class="field acceptance-result-field"><span>Acceptance result <em>*</em></span><select name="acceptanceResult"><option value="">Select result</option><option>Pass — accepted for stock preparation</option><option>Conditional — review required</option><option>Fail — quarantine</option></select></label>
+                  <label class="field"><span>Status <em>*</em></span><select name="testStatus" required><option value="">Select status</option><option>Pass</option><option>Fail</option></select></label>
                 </div>
+                <div class="purity-decision">
+                  <label class="field acceptance-result-field"><span>Acceptance result <em>*</em></span><select name="acceptanceResult"><option value="">Select result</option><option>Pass — accepted for stock preparation</option><option>Conditional — review required</option><option>Fail — quarantine</option></select></label>
+                  <label class="field"><span>Number of Stock Culture Prepared (Vial) <em>*</em></span><input name="stockCulturePrepared" type="number" min="1" step="1" placeholder="Enter quantity" required /></label>
                 <div class="callout callout-info"><span class="callout-icon">i</span><span>Keep the organism in <strong>quarantine</strong> until purity and identification checks are recorded.</span></div>
+                </div>
+                <div class="acceptance-action-buttons" role="group" aria-label="Acceptance testing actions">
+                  <button class="button button-primary" type="button">Performed</button>
+                  <button class="button button-secondary" type="button">Reviewed</button>
+                  <button class="button button-secondary" type="button">Endorsed</button>
+                </div>
               </section>
             </div>
 
             <div class="form-grid form-grid-bottom">
               <section class="card form-section" data-step="3">
-                <div class="section-heading"><div class="section-number">03</div><div><span class="eyebrow">Receipt condition</span><h2>Inspection checklist</h2><p>Document the package, quantity and any deviation found on receipt.</p></div></div>
-                <div class="form-fields two-columns">
-                  <label class="field"><span>Ordered amount <em>*</em></span><input name="orderedAmount" type="number" min="1" placeholder="e.g. 10" /></label>
-                  <label class="field"><span>Number of tubes / loops per batch <em>*</em></span><input name="tubeCount" type="number" min="1" placeholder="e.g. 10" /></label>
-                  <label class="field"><span>Condition of package / tube <em>*</em></span><select name="condition"><option value="">Select condition</option><option>Intact — no deviation</option><option>Minor packaging damage</option><option>Temperature excursion</option><option>Leak / contamination suspected</option></select></label>
-                  <label class="field"><span>Cold-chain reading</span><input name="coldChain" placeholder="e.g. 4.2 °C on receipt" /></label>
-                  <label class="field field-span-2"><span>Inspection comment</span><textarea name="comment" rows="4" placeholder="Describe any receipt observation, deviation or corrective action."></textarea></label>
-                </div>
-                <label class="upload-zone" for="certificate-file"><span class="upload-glyph">↑</span><span><strong>Upload birth / authenticity certificate</strong><small>PDF only · max 10 MB · click to attach a mock file</small></span><span class="upload-action">Choose file</span><input id="certificate-file" name="certificate" type="file" accept="application/pdf" /></label>
-                <div class="file-chip is-hidden" id="selected-file"><span>PDF</span><strong></strong><button type="button" aria-label="Remove file" id="remove-file">×</button></div>
-              </section>
-
-              <section class="card form-section" data-step="4">
-                <div class="section-heading"><div class="section-number">04</div><div><span class="eyebrow">Release to storage</span><h2>Storage &amp; governance</h2><p>Assign a precise location and reviewers for the stock culture.</p></div></div>
+                <div class="section-heading"><div class="section-number">03</div><div><span class="eyebrow">Release to storage</span><h2>Storage &amp; governance</h2><p>Assign a precise location and reviewers for the stock culture.</p></div></div>
                 <div class="form-fields two-columns">
                   <label class="field"><span>Refrigerator / freezer</span><select name="storage"><option value="">Select location</option><option>Freezer 01 · −80 °C</option><option>Freezer 02 · −20 °C</option><option>Refrigerator 01 · 2–8 °C</option></select></label>
                   <label class="field"><span>Rack and box</span><select name="rack"><option value="">Select rack / box</option><option>Rack A · Box 04</option><option>Rack B · Box 02</option><option>Rack C · Box 07</option><option>Rack D · Box 01</option></select></label>
-                  <label class="field"><span>Endorsed by</span><select name="endorsedBy"><option value="">Select endorser</option><option>Dr. Mei L.</option><option>Laboratory manager</option></select></label>
                 </div>
                 <div class="release-check"><label class="checkbox-row"><input type="checkbox" name="releaseToStorage" /><span></span><strong>Release to storage after acceptance</strong></label><small>Leave unchecked to save as a quarantine draft.</small></div>
               </section>

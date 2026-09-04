@@ -209,6 +209,35 @@ body { background: #f7f7f7; }
 #view-dashboard .metric-grid,
 #view-dashboard .workflow-card { display: none; }
 #view-dashboard .table-wrap { max-height: 430px; overflow: auto; }
+body.qc-register-index:has(#view-dashboard.is-visible) { height: 100dvh; overflow: hidden; }
+body.qc-register-index:has(#view-dashboard.is-visible) .app-shell { height: 100%; min-height: 0; }
+body.qc-register-index:has(#view-dashboard.is-visible) .main-content {
+  display: flex; flex-direction: column; height: 100%; min-height: 0; padding-bottom: 0;
+}
+body.qc-register-index:has(#view-dashboard.is-visible) .topbar { flex-shrink: 0; }
+body.qc-register-index:has(#view-dashboard.is-visible) .main-content::after {
+  position: static; flex-shrink: 0; white-space: normal;
+}
+body.qc-register-index:has(#view-dashboard.is-visible) .page-container {
+  display: flex; flex-direction: column; flex: 1; min-height: 0; padding-bottom: 10px;
+  width: 100%; max-width: 100%; min-width: 0; margin-inline: 0;
+}
+body.qc-register-index #view-dashboard.is-visible { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+body.qc-register-index #view-dashboard > .page-heading { flex-shrink: 0; }
+body.qc-register-index #view-dashboard > .table-card { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+body.qc-register-index #view-dashboard .table-card-heading,
+body.qc-register-index #view-dashboard .filter-bar,
+body.qc-register-index #view-dashboard .table-footer { flex-shrink: 0; }
+body.qc-register-index #view-dashboard .table-wrap {
+  flex: 1; min-height: 0; min-width: 0; width: 100%; max-width: 100%; max-height: none;
+  overflow-x: scroll; overflow-y: auto;
+}
+body.qc-register-index #view-dashboard .data-table { min-width: 1400px; }
+@media (max-width: 900px) {
+  body.qc-register-index:has(#view-dashboard.is-visible) .app-shell { display: flex; flex-direction: column; }
+  body.qc-register-index:has(#view-dashboard.is-visible) .sidebar { flex: 0 0 auto; }
+  body.qc-register-index:has(#view-dashboard.is-visible) .main-content { height: auto; flex: 1; }
+}
 #view-dashboard .data-table thead { position: sticky; top: 0; z-index: 2; }
 @media (max-width: 680px) {
   #view-dashboard .metric-grid { grid-template-columns: 1fr; }

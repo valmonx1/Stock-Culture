@@ -1,44 +1,415 @@
-const recordId=new URLSearchParams(location.search).get('record');
-let record=null;try{record=(JSON.parse(localStorage.getItem('stock-culture-records')||'[]')).find(item=>item.id===recordId)||null;}catch(error){}
-if(!record){const demo={"QC-2026-004":{id:'QC-2026-004',name:'Escherichia coli ATCC 25922',code:'EC-25922'},"QC-2026-006":{id:'QC-2026-006',name:'Staphylococcus aureus ATCC 29213',code:'SA-29213'},"QC-2026-008":{id:'QC-2026-008',name:'Pseudomonas aeruginosa ATCC 27853',code:'PA-27853'},"QC-2026-010":{id:'QC-2026-010',name:'Enterococcus faecalis ATCC 29212',code:'EF-29212'}};record=demo[recordId]||null;}
-const match=String(record?.name||'').match(/^(.*?)\s+ATCC\s+(\d+)/i);const organism=match?match[1]:(record?.name||'QC organism');const atcc=match?`ATCC ${match[2]}`:(record?.code||'—');
-const filterPanel=document.querySelector('.entry-filter');
-if(filterPanel){filterPanel.innerHTML=`<div class="entry-left-top"><h2>Selected QC organism</h2><div class="entry-selected-organism"><span class="eyebrow">QC Organism</span><strong>${organism}</strong><span class="eyebrow">ATCC Number</span><strong>${atcc}</strong><span class="eyebrow">Organism ID</span><span>${record?.id||recordId||'—'}</span></div></div><div class="entry-left-bottom" aria-label="Available QC actions"><table class="entry-action-table"><thead><tr><th>Action</th></tr></thead><tbody><tr data-entry-action="acceptance"><td>Acceptance testing</td></tr><tr data-entry-action="culture-checking"><td>Culture Checking</td></tr><tr data-entry-action="subculture"><td>Process subculture</td></tr><tr data-entry-action="storage"><td>Storage</td></tr><tr data-entry-action="qc-trail"><td>QC Trail</td></tr></tbody></table></div>`;filterPanel.style.background='#fff';filterPanel.style.color='#7d8f9f';}
-document.querySelector('.entry-tests')?.remove();
-const workspaceCard=document.querySelector('.entry-workspace');if(workspaceCard)workspaceCard.innerHTML='';
-const entryActionStyle=document.createElement('style');entryActionStyle.textContent='.entry-action-table tbody tr{cursor:pointer}.entry-action-table tbody tr:hover{background:#edf6ff}.entry-form-head{display:flex;justify-content:space-between;gap:12px;padding:16px 18px;border-bottom:1px solid #e4ebf2}.entry-form-head h2{margin:3px 0;font-size:18px}.entry-form-head p{margin:0;color:#7c91a8;font-size:12px}.entry-form{padding:16px 18px}.entry-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.entry-form .field select,.entry-form .field input{width:100%;min-height:40px;padding:9px;border:1px solid #d4e0ec;border-radius:8px;font:inherit;color:#526a84;background:#fff}.entry-form-actions{display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #e4ebf2;margin-top:18px;padding-top:14px}.entry-form-actions .button-perform{background:#e4a11b;color:#fff}.entry-form-actions .button-review{background:#199d7d;color:#fff}@media(max-width:850px){.entry-form-grid{grid-template-columns:1fr}}';document.head.appendChild(entryActionStyle);
-const formColumnStyle=document.createElement('style');formColumnStyle.textContent='.entry-form-grid{grid-template-columns:minmax(0,25%);column-gap:14px;row-gap:5px;padding-right:18px}.entry-form .field{gap:2px;margin:0}.entry-form .field span{line-height:1.15}.entry-form .field select,.entry-form .field input{min-height:31px;height:31px;padding:4px 9px;font-size:11px}.entry-form-actions{width:27%;justify-content:flex-end;padding-right:18px;padding-top:10px}';document.head.appendChild(formColumnStyle);
-const dividerStyle=document.createElement('style');dividerStyle.textContent='.entry-workspace{position:relative}.entry-workspace::after{content:"";position:absolute;top:108px;bottom:18px;left:29%;width:1px;background:#dfe7ef;pointer-events:none}.entry-left-bottom{overflow:visible}';document.head.appendChild(dividerStyle);
-const subcultureEntryStyle=document.createElement('style');subcultureEntryStyle.textContent='.entry-subculture-grid{display:grid;grid-template-columns:minmax(0,25%);gap:7px;padding-right:18px}.entry-subculture-grid .field{gap:2px;margin:0}.entry-subculture-grid .field span{font-size:12px;line-height:1.15;color:#526b84}.entry-subculture-grid select,.entry-subculture-grid input{width:100%;height:31px;min-height:31px;padding:4px 9px;border:1px solid #d4e0ec;border-radius:8px;font-size:11px;color:#526a84;background:#fff}.entry-dimmed{background:#eef2f5!important;color:#7f90a1!important}.entry-subculture-actions{display:flex;justify-content:flex-end;width:27%;padding-right:18px;padding-top:10px}.entry-subculture-actions .button-process{background:#1678df;color:#fff;border:0}@media(max-width:1100px){.entry-subculture-grid{grid-template-columns:minmax(0,1fr);padding-right:10px}.entry-subculture-actions{width:100%;padding-right:10px}}';document.head.appendChild(subcultureEntryStyle);
-const showEntryNotice=(message)=>{document.querySelector('.entry-notice')?.remove();const notice=document.createElement('div');notice.className='entry-notice';notice.textContent=message;document.body.appendChild(notice);window.setTimeout(()=>notice.remove(),7000);};const noticeStyle=document.createElement('style');noticeStyle.textContent='.entry-notice{position:fixed;right:22px;bottom:22px;z-index:9999;padding:13px 18px;border:1px solid #b8e2d5;border-radius:9px;background:#e9f8f3;color:#187b65;box-shadow:0 8px 22px rgba(30,80,70,.16);font-size:13px;font-weight:600}';document.head.appendChild(noticeStyle);
-const nativeEntryAlert=window.alert.bind(window);window.alert=(message)=>{if(String(message).includes('Process subculture performed successfully')){showEntryNotice('Successfully Perform, Proceed to subculture');return;}nativeEntryAlert(message);};
-const renderSubcultureEntry=()=>{if(!workspaceCard)return;workspaceCard.innerHTML=`<div class="entry-form-head"><div><span class="eyebrow accent-eyebrow">Controlled propagation</span><h2>Process subculture</h2><p>Create a traceable working stock from the selected QC organism.</p></div></div><form class="entry-form" id="entry-subculture-form"><div class="entry-subculture-grid"><label class="field"><span>Source organism</span><input class="entry-dimmed" value="${organism}" readonly></label><label class="field"><span>ATCC</span><input class="entry-dimmed" value="${atcc}" readonly></label><label class="field"><span>Source tube / (Stock Culture Vial) <em>*</em></span><select name="sourceTube"><option value="">Select vial</option>${Array.from({length:12},(_,i)=>`<option>V${i+1}</option>`).join('')}</select></label><label class="field"><span>Passage Number <em>*</em></span><select name="passage"><option value="">Select passage</option>${Array.from({length:7},(_,i)=>`<option>${i+1}</option>`).join('')}</select></label><label class="field"><span>Number of working slant prepared</span><select name="workingSlant"><option value="">Select number</option>${[1,2,3,4,5].map(v=>`<option>${v}</option>`).join('')}</select></label><label class="field"><span>Date performed <em>*</em></span><input name="datePerformed" type="date"></label></div><div class="entry-subculture-actions"><button class="button button-process" type="submit">Process subculture <span class="button-symbol">→</span></button></div></form><section class="entry-result-panel"><h3>Performed subculture</h3><p>Data yang telah dimasukkan</p><div class="entry-result-list" id="subculture-result-list"></div></section>`;document.getElementById('entry-subculture-form').addEventListener('submit',event=>{event.preventDefault();const data=new FormData(event.target);if(!data.get('sourceTube')||!data.get('passage')||!data.get('workingSlant')||!data.get('datePerformed')){alert('Lengkapkan semua maklumat Process subculture.');return;}const list=document.getElementById('subculture-result-list');const row=document.createElement('div');row.className='entry-result-row';row.innerHTML=`<div class="entry-result-row-title">Source tube: ${data.get('sourceTube')}</div><div class="entry-result-grid"><div class="entry-result-item"><span>Source tube / vial</span><strong>${data.get('sourceTube')}</strong></div><div class="entry-result-item"><span>Passage number</span><strong>${data.get('passage')}</strong></div><div class="entry-result-item"><span>Working slant prepared</span><strong>${data.get('workingSlant')}</strong></div></div>`;list.appendChild(row);event.target.reset();alert('Process subculture performed successfully.');});};
-const noScrollStyle=document.createElement('style');noScrollStyle.textContent='html,body{overflow:hidden}.main-content{overflow:hidden}.entry-result-panel{overflow:hidden}';document.head.appendChild(noScrollStyle);
-const responsiveStyle=document.createElement('style');responsiveStyle.textContent='@media(max-width:1400px){.entry-layout{grid-template-columns:220px minmax(0,1fr)!important;gap:12px}.entry-filter{padding:10px}.entry-selected-organism strong{font-size:14px}}@media(max-width:1100px){.entry-layout{grid-template-columns:180px minmax(0,1fr)!important;gap:10px}.entry-filter{padding:8px}.entry-result-panel{left:28%;padding-left:14px;padding-right:12px}.entry-result-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:6px 10px}.entry-result-row{position:relative;padding-top:12px}.entry-card-review{position:absolute;right:14px;top:8px;bottom:auto;display:block;margin:0}}@media(max-width:700px){.entry-layout{grid-template-columns:135px minmax(0,1fr)!important;gap:7px}.entry-filter{padding:6px}.entry-selected-organism strong{font-size:12px}.entry-result-panel{left:25%;padding-left:10px}.entry-result-item{min-width:0}.entry-result-item strong{font-size:11px;overflow-wrap:anywhere}}';document.head.appendChild(responsiveStyle);
-const cardReviewStyle=document.createElement('style');cardReviewStyle.textContent='.entry-result-row{position:relative;padding-right:14px}.entry-card-review{position:absolute;right:14px;bottom:14px;padding:7px 14px;background:#199d7d;color:#fff;border:0;border-radius:7px;font-size:11px;font-weight:600;cursor:pointer}';document.head.appendChild(cardReviewStyle);
-const cardEditStyle=document.createElement('style');cardEditStyle.textContent='.entry-result-row-title{position:relative;padding-right:28px}.entry-card-edit{position:absolute;right:0;top:-3px;width:24px;height:24px;border:1px solid #cbdbe8;border-radius:6px;background:#fff;color:#52708b;font-size:14px;line-height:20px;cursor:pointer}.entry-card-edit:hover{background:#edf6ff;color:#1674c5}';document.head.appendChild(cardEditStyle);
-const renderCultureChecking=()=>{if(!workspaceCard)return;workspaceCard.innerHTML=`<div class="entry-form-head"><div><span class="eyebrow accent-eyebrow">Monthly verification</span><h2>Culture checking details</h2><p>Complete all fields before saving the monthly check.</p></div></div><form class="entry-form" id="entry-culture-form"><div class="entry-form-grid"><label class="field"><span>ATCC <em>*</em></span><select name="atcc"><option>${atcc||'Select ATCC'}</option><option>ATCC 25922</option><option>ATCC 29213</option><option>ATCC 27853</option><option>ATCC 29212</option></select></label><label class="field"><span>Source tube / (Stock Culture Vial) <em>*</em></span><select name="vial"><option value="">Select vial</option>${Array.from({length:12},(_,i)=>`<option>V${i+1}</option>`).join('')}</select></label><label class="field"><span>Identification Test <em>*</em></span><select name="test" id="entry-identification-test"><option value="">Select test</option><option>Gram Stain</option><option>Catalase</option><option>Oxidase</option><option>Coagulase</option><option>PYR Hydrolysis</option><option>Malditof</option><option>Vitek</option></select></label><label class="field"><span>Expected Result <em>*</em></span><select name="expected" id="entry-expected-result" disabled><option>Select identification test first</option></select></label><label class="field"><span>Performance <em>*</em></span><select name="performance"><option value="">Select performance</option><option>Pass</option><option>Fail</option></select></label><label class="field"><span>Lot Number <em>*</em></span><input name="lot" placeholder="Enter lot number"></label><label class="field"><span>Expiry Date <em>*</em></span><input name="expiry" type="date"></label></div><div class="entry-form-actions"><button class="button button-perform" type="submit">Perform</button></div></form>`;const test=document.getElementById('entry-identification-test');const expected=document.getElementById('entry-expected-result');test.addEventListener('change',()=>{const values={"Gram Stain":["Gram Positive Cocci in Cluster","Gram Positive Rod","Gram Negative Rod"],Catalase:["Positive (Produce Bubble)","Negative (No Produce Bubbles)","Not Applicable"],Oxidase:["Positive (Dark Purple)","Negative (No Color)","Not Applicable"],Coagulase:["Positive (Clotting)","Negative (No Clotting)","Not Applicable"],"PYR Hydrolysis":["Positive (Red or Pink Color)","Negative (No Color)","Not Applicable"],Malditof:["Pass","Fail"],Vitek:["Pass","Fail"]}[test.value]||[];expected.innerHTML='<option value="">Select expected result</option>'+values.map(v=>`<option>${v}</option>`).join('');expected.disabled=!values.length;});document.getElementById('entry-culture-form').addEventListener('submit',e=>{e.preventDefault();alert('Culture checking performed successfully.');});};
-document.querySelector('[data-entry-action="culture-checking"]')?.addEventListener('click',renderCultureChecking);
-document.querySelector('[data-entry-action="subculture"]')?.addEventListener('click',renderSubcultureEntry);
-document.querySelector('[data-entry-action="subculture"]')?.addEventListener('click',()=>setTimeout(()=>{const form=document.getElementById('entry-subculture-form');form?.querySelectorAll('.entry-dimmed').forEach(input=>input.closest('.field')?.remove());form?.querySelector('[name="datePerformed"]')?.closest('.field')?.remove();if(form&&!form.elements.datePerformed){const hidden=document.createElement('input');hidden.type='hidden';hidden.name='datePerformed';hidden.value=new Date().toISOString().slice(0,10);form.appendChild(hidden);}const processButton=form?.querySelector('.button-process');if(processButton)processButton.innerHTML='Perform';},0));
-document.querySelector('[data-entry-action="culture-checking"]')?.addEventListener('click',()=>setTimeout(()=>document.querySelector('#entry-culture-form select[name="atcc"]')?.closest('.field')?.remove(),0));
-const entryStyle=document.createElement('style');entryStyle.textContent='.entry-left-top{padding:18px;background:#f1f4f7;border-radius:10px}.entry-left-bottom{flex:1;min-height:220px;margin-top:18px;border-top:1px solid #e1e8ef;padding-top:12px;overflow:auto}.entry-selected-organism{display:grid;gap:7px}.entry-selected-organism strong{color:#253d57;font-size:17px;margin-bottom:10px}.entry-selected-organism>span:not(.eyebrow){color:#6d839a;font-size:13px}.entry-action-table{width:100%;border-collapse:collapse;background:#fff}.entry-action-table th,.entry-action-table td{padding:10px 9px;border:1px solid #d9e3ec;text-align:left;font-size:12px;color:#536b84}.entry-action-table th{background:#ffd19e;color:#314c67;font-size:11px;text-transform:uppercase;letter-spacing:.4px}';document.head.appendChild(entryStyle);
-const heightStyle=document.createElement('style');heightStyle.textContent='.entry-page{width:100%;max-width:none;min-height:0;display:block;padding-right:14px;padding-left:14px}.entry-layout{height:calc(100vh - 245px);min-height:0;align-items:stretch;gap:18px;grid-template-columns:340px minmax(0,1fr)}.entry-filter,.entry-workspace{height:100%;min-height:0}.entry-filter{display:flex;flex-direction:column;padding:16px}.entry-workspace{overflow:hidden}.entry-titlebar{margin-bottom:18px}.entry-titlebar h1{letter-spacing:-.5px}.entry-form-head{background:linear-gradient(135deg,#f7fbff,#fff)}.entry-form{height:calc(100% - 82px);display:flex;flex-direction:column;padding:18px 20px}.entry-form-grid{gap:16px}.entry-form .field span{font-size:12px;color:#526b84}.entry-form-actions{margin-top:auto;padding-top:16px;transform:translateY(-18px)}.entry-left-bottom{margin-top:14px}.entry-action-table th{background:#edf5fc;color:#52708b}.entry-action-table td{padding:11px 10px}.entry-workspace{border-color:#d9e5ef}';document.head.appendChild(heightStyle);
-const resultStyle=document.createElement('style');resultStyle.textContent='.entry-result-panel{position:absolute;left:32%;right:18px;top:108px;bottom:18px;padding:18px 22px;border-left:1px solid #dfe7ef;background:#fbfdff;overflow:auto}.entry-result-panel h3{margin:0 0 5px;color:#243d58;font-size:16px}.entry-result-panel p{margin:0 0 16px;color:#7c91a8;font-size:12px}.entry-result-list{display:flex;flex-direction:column;gap:10px}.entry-result-row{padding:12px 14px;border:1px solid #d9e5ef;border-radius:10px;background:#fff;box-shadow:0 3px 10px rgba(48,78,108,.06)}.entry-result-row-title{margin-bottom:4px;color:#1f8f78;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}.entry-result-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 18px}.entry-result-item{padding:7px 0}.entry-result-item span{display:block;color:#8a9caf;font-size:10px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}.entry-result-item strong{color:#415d77;font-size:12px;font-weight:600}@media(max-width:850px){.entry-result-panel{position:static;margin:12px 18px;border-left:0;border-top:1px solid #dfe7ef}}';document.head.appendChild(resultStyle);
-document.addEventListener('submit',event=>{if(event.target.id!=='entry-culture-form'||!workspaceCard)return;const data=new FormData(event.target);const labels=[['Source tube / vial',data.get('vial')||'—'],['Identification test',data.get('test')||'—'],['Expected result',data.get('expected')||'—'],['Performance',data.get('performance')||'—'],['Lot number',data.get('lot')||'—'],['Expiry date',data.get('expiry')||'—']];let panel=workspaceCard.querySelector('.entry-result-panel');if(!panel){panel=document.createElement('section');panel.className='entry-result-panel';panel.innerHTML='<h3>Performed culture checking</h3><p>Data yang telah dimasukkan</p><div class="entry-result-list"></div>';workspaceCard.appendChild(panel);}const list=panel.querySelector('.entry-result-list');const row=document.createElement('div');row.className='entry-result-row';row.innerHTML='<div class="entry-result-row-title">Vial '+(data.get('vial')||'—')+'<button type="button" class="entry-card-edit" aria-label="Edit vial record">✎</button></div><div class="entry-result-grid">'+labels.map(([label,value])=>`<div class="entry-result-item"><span>${label}</span><strong>${value}</strong></div>`).join('')+'</div><button type="button" class="entry-card-review button button-review">Review</button>';list.appendChild(row);event.target.reset();const expected=event.target.querySelector('#entry-expected-result');if(expected){expected.innerHTML='<option>Select identification test first</option>';expected.disabled=true;}});
-document.addEventListener('click',event=>{if(event.target.closest('.entry-card-review'))alert('Culture checking ready for review.');});
-const mobileReviewFix=document.createElement('style');mobileReviewFix.textContent='@media(max-width:1100px){.entry-result-row{position:relative!important;padding-top:12px!important}.entry-card-review{position:absolute!important;top:8px!important;bottom:auto!important;right:14px!important;margin:0!important}}';document.head.appendChild(mobileReviewFix);
-const prepFooterFix=document.createElement('style');prepFooterFix.textContent='.entry-prep-footer{position:relative!important;right:auto!important;bottom:auto!important;width:max-content;margin-left:auto;transform:translate(100px,-18px)}';document.head.appendChild(prepFooterFix);
-const prepFooterReset=document.createElement('style');prepFooterReset.textContent='.entry-prep-footer{position:static!important;width:auto;margin-left:0;transform:none;display:flex;justify-content:flex-end;gap:8px;padding-top:12px}';document.head.appendChild(prepFooterReset);
-const prepStackStyle=document.createElement('style');prepStackStyle.textContent='.entry-prep-card{position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;margin:0 18px 14px 32%;min-height:180px}.entry-prep-card+.entry-prep-card{margin-top:14px}@media(max-width:1100px){.entry-prep-card{margin-left:28%;margin-right:14px}}';document.head.appendChild(prepStackStyle);
-const prepVisibilityFix=document.createElement('style');prepVisibilityFix.textContent='.entry-workspace{overflow-y:auto!important;overflow-x:hidden!important;position:relative}.entry-prep-card{max-width:calc(100% - 29%);box-sizing:border-box}';document.head.appendChild(prepVisibilityFix);
-const prepAbsoluteStack=document.createElement('style');prepAbsoluteStack.textContent='.entry-prep-card{position:absolute!important;left:32%!important;right:18px!important;top:auto!important;bottom:auto!important;margin:0!important;min-height:180px}@media(max-width:1100px){.entry-prep-card{left:28%!important;right:14px!important}}';document.head.appendChild(prepAbsoluteStack);
-const prepTopFix=document.createElement('style');prepTopFix.textContent='.entry-prep-card{top:calc(var(--prep-index, 0) * 220px)!important;margin-top:0!important}';document.head.appendChild(prepTopFix);
-const prepCultureLayout=document.createElement('style');prepCultureLayout.textContent='.entry-prep-card{top:150px!important;right:0!important;left:29%!important;bottom:auto!important;min-height:150px;padding:18px 22px;border:1px solid #d9e5ef;border-radius:12px;background:#fff;box-shadow:0 4px 14px rgba(48,78,108,.06);z-index:2}.entry-prep-card+.entry-prep-card{top:calc(150px + 220px)!important}@media(max-width:1100px){.entry-prep-card{left:26%!important;right:0!important}}';document.head.appendChild(prepCultureLayout);
-const prepCardCompact=document.createElement('style');prepCardCompact.textContent='.entry-prep-card{min-height:110px!important;padding:14px 18px!important}.entry-prep-card h3{font-size:15px!important;margin-bottom:3px!important}.entry-prep-meta{margin-bottom:8px!important}';document.head.appendChild(prepCardCompact);
-const prepCardWidth=document.createElement('style');prepCardWidth.textContent='.entry-prep-card{left:33%!important;right:5%!important}@media(max-width:1100px){.entry-prep-card{left:30%!important;right:4%!important}}';document.head.appendChild(prepCardWidth);
-document.getElementById('entry-close').addEventListener('click',()=>location.href='index.html');document.querySelectorAll('.entry-tabs button').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('.entry-tabs button').forEach(item=>item.classList.remove('is-active'));button.classList.add('is-active');}));
-document.querySelectorAll('.entry-prep-card,.prep-panel-heading,.prep-scroll-area').forEach(item=>item.remove());
-const subcultureCardStyle=document.createElement('style');subcultureCardStyle.textContent='.subculture-card-actions{display:flex;gap:6px;float:right}.subculture-card-actions button{width:28px;height:28px;border:1px solid #cbdbe8;border-radius:7px;background:#fff;color:#52708b;cursor:pointer;font-size:15px}.subculture-card-actions button:hover{background:#edf6ff;color:#1674c5}.subculture-extra{display:none;margin-top:12px;padding-top:12px;border-top:1px solid #e2eaf1}.subculture-extra.is-open{display:block}.subculture-extra-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.subculture-extra label{display:grid;gap:4px;color:#8a9caf;font-size:10px;text-transform:uppercase;letter-spacing:.3px}.subculture-extra input,.subculture-extra select{height:30px;padding:4px 7px;border:1px solid #d4e0ec;border-radius:6px;background:#fff;color:#526a84;font-size:11px}';document.head.appendChild(subcultureCardStyle);const subcultureCardObserver=new MutationObserver(()=>document.querySelectorAll('#subculture-result-list .entry-result-row').forEach(row=>{if(row.querySelector('.subculture-card-actions'))return;const title=row.querySelector('.entry-result-row-title');if(title){const actions=document.createElement('span');actions.className='subculture-card-actions';actions.innerHTML='<button type="button" class="subculture-add" title="Show additional data">+</button><button type="button" title="Edit">✎</button><button type="button" title="Delete">🗑</button>';title.appendChild(actions);}const extra=document.createElement('div');extra.className='subculture-extra';extra.innerHTML='<div class="subculture-extra-grid"><label>Media / plate<select><option>Select medium</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option></select></label><label>Media lot number<input placeholder="Lot number"></label><label>Incubation condition<select><option>Select condition</option><option>35 ± 2 °C · Ambient air</option><option>35 ± 2 °C · 5% CO₂</option></select></label><label>Incubation duration<input placeholder="e.g. 18–24 hours"></label><label>Number of tube/loops<input type="number" min="1" placeholder="e.g. 10"></label><label>Prepared by<select><option>Select user</option><option>Sarah A.</option><option>Dr. Amir R.</option></select></label></div>';row.appendChild(extra);}));subcultureCardObserver.observe(document.body,{childList:true,subtree:true});document.addEventListener('click',event=>{const add=event.target.closest('.subculture-add');if(!add)return;const extra=add.closest('.entry-result-row')?.querySelector('.subculture-extra');if(!extra)return;const open=extra.classList.toggle('is-open');add.textContent=open?'−':'+';});
-const subcultureExtraRowStyle=document.createElement('style');subcultureExtraRowStyle.textContent='.subculture-extra{overflow-x:auto;overflow-y:hidden}.subculture-extra-grid{display:grid;grid-template-columns:repeat(6,minmax(220px,1fr));min-width:1350px;gap:10px}.subculture-extra label{min-width:0}';document.head.appendChild(subcultureExtraRowStyle);
-const subcultureExtraTableStyle=document.createElement('style');subcultureExtraTableStyle.textContent='.subculture-extra-table{border-collapse:collapse;min-width:1350px;width:100%}.subculture-extra-table th{padding:8px;background:#f1f6fb;color:#71879d;font-size:10px;text-align:left;text-transform:uppercase}.subculture-extra-table td{padding:7px;border-bottom:1px solid #dfe8f0}.subculture-extra-table input,.subculture-extra-table select{width:100%;height:30px;padding:4px 7px;border:1px solid #d4e0ec;border-radius:6px;background:#fff;color:#526a84;font-size:11px}';document.head.appendChild(subcultureExtraTableStyle);const subcultureExtraTableObserver=new MutationObserver(()=>document.querySelectorAll('#subculture-result-list .entry-result-row .subculture-extra').forEach(extra=>{if(extra.querySelector('.subculture-extra-table'))return;const row=extra.closest('.entry-result-row');const values=[...row.querySelectorAll('.entry-result-item strong')];const count=Math.max(1,Number(values[2]?.textContent||1));const options='<option>Select medium</option><option>Blood agar plate</option><option>Mueller-Hinton agar</option><option>MacConkey agar</option>';const conditions='<option>Select condition</option><option>35 ± 2 °C · Ambient air</option><option>35 ± 2 °C · 5% CO₂</option>';const users='<option>Select user</option><option>Sarah A.</option><option>Dr. Amir R.</option>';const rows=Array.from({length:count},(_,i)=>`<tr><td>${i+1}</td><td><select name="media_${i+1}">${options}</select></td><td><input name="lot_${i+1}" placeholder="Lot number"></td><td><select name="condition_${i+1}">${conditions}</select></td><td><input name="duration_${i+1}" placeholder="e.g. 18–24 hours"></td><td><input name="quantity_${i+1}" type="number" min="1" placeholder="e.g. 10"></td><td><select name="prepared_${i+1}">${users}</select></td></tr>`).join('');extra.innerHTML=`<table class="subculture-extra-table"><thead><tr><th>No.</th><th>Media / plate</th><th>Media lot number</th><th>Incubation condition</th><th>Incubation duration</th><th>Number of tube/loops</th><th>Prepared by</th></tr></thead><tbody>${rows}</tbody></table>`;}));subcultureExtraTableObserver.observe(document.body,{childList:true,subtree:true});
+'use strict';
+
+// Keep the mockup's existing identification options; these are not clinical rules.
+const ENTRY_EXPECTED_RESULTS = {
+  'Gram Stain': ['Gram Positive Cocci in Cluster', 'Gram Positive Rod', 'Gram Negative Rod'],
+  Catalase: ['Positive (Produce Bubble)', 'Negative (No Produce Bubbles)', 'Not Applicable'],
+  Oxidase: ['Positive (Dark Purple)', 'Negative (No Color)', 'Not Applicable'],
+  Coagulase: ['Positive (Clotting)', 'Negative (No Clotting)', 'Not Applicable'],
+  'PYR Hydrolysis': ['Positive (Red or Pink Color)', 'Negative (No Color)', 'Not Applicable'],
+  Malditof: ['Pass', 'Fail'],
+  Vitek: ['Pass', 'Fail']
+};
+
+function readEntryRows(storage, key) {
+  const raw = storage.getItem(key);
+  if (!raw) return [];
+  const rows = JSON.parse(raw);
+  if (!Array.isArray(rows)) throw new Error('Invalid saved entry data');
+  return rows.map(row => {
+    // Earlier Save-only records incorrectly used performedAt for their save time.
+    if (row.performedAt && !row.savedAt && !row.performedBy && !row.status) {
+      const { performedAt, ...savedRow } = row;
+      return { ...savedRow, savedAt: performedAt, status: 'Saved' };
+    }
+    return row;
+  });
+}
+
+function createEntryRow(recordId, mode, data, rows, now = new Date()) {
+  if (!recordId || !['culture', 'weekly', 'subculture'].includes(mode)) throw new Error('Select a QC organism first.');
+  const quantity = Number(data.quantity);
+  if (!/^V[1-9]\d*$/.test(data.vial || '') || !/^P[1-4]$/.test(data.passage || '') ||
+      (mode !== 'weekly' && !(ENTRY_EXPECTED_RESULTS[data.test] || []).includes(data.expected)) || !String(data.lot || '').trim() ||
+      !Number.isSafeInteger(quantity) || quantity < 1) throw new Error('Complete the source vial, passage and prepared culture.');
+  if (mode === 'weekly' && !/^P[1-4]$/.test(data.weeklyPassage || '')) throw new Error('Select the weekly passage.');
+  if (mode === 'weekly' && !String(data.media || '').trim()) throw new Error('Select the weekly culture media.');
+  if (mode === 'culture' && !String(data.methodIdentification || '').trim()) throw new Error('Select the monthly identification method.');
+  if ((mode !== 'weekly' && !['Pass', 'Fail'].includes(data.performance)) ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(data.expiry || '') ||
+      !Number.isFinite(Date.parse(data.expiry))) throw new Error('Complete all culture checking fields.');
+  if (mode === 'weekly' && (!/^\d{4}-\d{2}-\d{2}$/.test(data.datePrepared || '') ||
+      !/^\d{4}-\d{2}-\d{2}$/.test(data.dateDiscarded || '') ||
+      !Number.isFinite(Date.parse(data.datePrepared)) || !Number.isFinite(Date.parse(data.dateDiscarded)) ||
+      data.dateDiscarded < data.datePrepared)) throw new Error('Complete the weekly preparation and discard dates.');
+  const prefix = ({ culture: 'MQC-', weekly: 'WQC-', subculture: 'SUB-' }[mode]) + now.getFullYear() + '-';
+  const sequence = rows.reduce((max, row) => row.id?.startsWith(prefix) ?
+    Math.max(max, Number(row.id.slice(prefix.length)) || 0) : max, 0) + 1;
+  return {
+    id: prefix + String(sequence).padStart(4, '0'),
+    recordId, mode, vial: data.vial, passage: data.passage, weeklyPassage: mode === 'weekly' ? data.weeklyPassage : '', workingSlant: '', quantity,
+    media: mode === 'weekly' ? data.media : '',
+    observedOrganism: mode === 'culture' ? String(data.observedOrganism || '') : '',
+    methodIdentification: mode === 'culture' ? data.methodIdentification : '',
+    bioNumber: mode === 'culture' ? String(data.bioNumber || '').trim() : '',
+    test: mode === 'weekly' ? '' : data.test,
+    expected: mode === 'weekly' ? '' : data.expected,
+    performance: mode === 'weekly' ? '' : data.performance,
+    lot: data.lot.trim(),
+    expiry: data.expiry,
+    datePrepared: mode === 'weekly' ? data.datePrepared : '',
+    dateDiscarded: mode === 'weekly' ? data.dateDiscarded : '',
+    savedAt: now.toISOString(),
+    status: 'Saved'
+  };
+}
+
+const ENTRY_RESULT_COLUMNS = {
+  culture: [
+    ['id', 'Monthly QC ID', 'result-id'], ['vial', 'Source Tube', 'result-vial'],
+    ['test', 'Identification Test', 'result-test'], ['expected', 'Expected Result', 'result-expected'],
+    ['lot', 'Kit Lot Number', 'result-lot'], ['passage', 'Passage (Monthly)', 'result-passage'],
+    ['workingSlant', 'Working Slant', 'result-slant'], ['quantity', 'Working Culture Prepared', 'result-quantity'],
+    ['performance', 'Status', 'result-performance'], ['expiry', 'Kit Expiry Date', 'result-expiry'],
+    ['datePrepared', 'Date Prepared', 'result-expiry'], ['dateDiscarded', 'Date Discarded', 'result-expiry']
+  ],
+  subculture: [
+    ['id', 'Subculture ID', 'result-id'], ['vial', 'Source Tube', 'result-vial'],
+    ['quantity', 'Number of Working Culture (Slant)', 'result-quantity'], ['passage', 'Passage (Working)', 'result-passage'],
+    ['test', 'Identification Test', 'result-test'], ['lot', 'Kit Lot Number', 'result-lot'],
+    ['expiry', 'Kit Expiry Date', 'result-expiry'], ['expected', 'Expected Result', 'result-expected'],
+    ['performance', 'Status', 'result-performance']
+  ],
+  weekly: [
+    ['id', 'Weekly QC ID', 'result-id'], ['vial', 'Source Tube', 'result-vial'],
+    ['quantity', 'Number of Working Culture (Slant)', 'result-quantity'], ['passage', 'Passage Working', 'result-passage'],
+    ['weeklyPassage', 'Passage Weekly', 'result-passage'], ['media', 'Media', 'result-media'],
+    ['lot', 'Media Lot Number', 'result-lot'], ['expiry', 'Media Expiry Date', 'result-expiry'],
+    ['datePrepared', 'Date Prepared', 'result-expiry'], ['dateDiscarded', 'Date Discarded', 'result-expiry']
+  ]
+};
+const ENTRY_AUDIT_COLUMNS = [
+  ['performedBy', 'Performed By', 'result-person'], ['performedAt', 'Performed Date', 'result-timestamp'],
+  ['reviewedBy', 'Reviewed By', 'result-person'], ['reviewedAt', 'Reviewed Date', 'result-timestamp'],
+  ['endorsedBy', 'Endorsed By', 'result-person'], ['endorsedAt', 'Endorsed Date', 'result-timestamp']
+];
+
+function performEntryRow(row, now = new Date()) {
+  return applyEntryAction(row, 'performed', now);
+}
+
+function applyEntryAction(row, action, now = new Date()) {
+  const labels = { performed: 'Performed', reviewed: 'Reviewed', endorsed: 'Endorsed' };
+  if (!Object.hasOwn(labels, action)) throw new Error('Unknown action');
+  if (row[action + 'At']) return row;
+  const updated = { ...row, [action + 'By']: 'Admin', [action + 'At']: now.toISOString() };
+  updated.status = updated.endorsedAt ? 'Endorsed' : updated.reviewedAt ? 'Reviewed' : 'Performed';
+  return updated;
+}
+
+function applyEntryActionToRows(rows, selectedIds, action, now = new Date()) {
+  const selected = new Set(selectedIds);
+  return rows.map(row => selected.has(row.id) ? applyEntryAction(row, action, now) : row);
+}
+
+function filterEntryRows(rows, recordId, mode, status = 'all') {
+  return rows.filter(row => {
+    const currentStatus = row.endorsedAt ? 'Endorsed' : row.reviewedAt ? 'Reviewed' : row.performedAt ? 'Performed' : 'Saved';
+    return row.recordId === recordId && row.mode === mode && (status === 'all' || currentStatus === status);
+  });
+}
+
+function filterPendingEndorsementRows(rows, recordId, mode, status = 'all') {
+  return filterEntryRows(rows, recordId, mode, status).filter(row => !row.endorsedAt);
+}
+
+function formatEntryTimestamp(value) {
+  if (!value) return '—';
+  const date = new Date(value);
+  if (!Number.isFinite(date.getTime())) return '—';
+  return date.toLocaleString('en-GB', { day: '2-digit', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+}
+
+function initEntry() {
+  const key = 'qc-entry-results-v2';
+  const id = new URLSearchParams(location.search).get('record');
+  const form = document.getElementById('entry-form');
+  const fields = document.getElementById('entry-fields');
+  const resultsCard = document.querySelector('.entry-results');
+  const resultsToggle = document.getElementById('entry-results-toggle');
+  function toggleResultsCard() {
+    const expanded = resultsCard.classList.toggle('is-collapsed') === false;
+    resultsToggle.textContent = expanded ? '−' : '+';
+    resultsToggle.setAttribute('aria-expanded', String(expanded));
+    resultsToggle.setAttribute('aria-label', expanded ? 'Collapse recorded results' : 'Expand recorded results');
+    resultsToggle.title = expanded ? 'Collapse recorded results' : 'Expand recorded results';
+  }
+  resultsToggle.addEventListener('click', toggleResultsCard);
+  document.addEventListener('keydown', event => {
+    if (event.code !== 'Space' || event.repeat || !document.getElementById('entry-action-modal').hidden) return;
+    const target = event.target;
+    if (target.closest?.('input, select, textarea, button, a, [contenteditable="true"]')) return;
+    event.preventDefault();
+    toggleResultsCard();
+  });
+  const error = document.getElementById('entry-error');
+  let record = null;
+  let mode = 'culture';
+  let timer;
+  function report(message) { error.textContent = message; error.hidden = false; }
+  function notify(message) {
+    const notice = document.getElementById('entry-notice');
+    notice.textContent = message;
+    notice.hidden = false;
+    clearTimeout(timer);
+    timer = setTimeout(() => { notice.hidden = true; }, 4500);
+  }
+  try {
+    const records = JSON.parse(localStorage.getItem('stock-culture-records') || '[]');
+    if (Array.isArray(records)) record = records.find(item => item.id === id) || null;
+    const selected = JSON.parse(sessionStorage.getItem('qc-entry-selected-record') || 'null');
+    if (selected?.id === id) record = selected;
+  } catch (e) { report('Unable to read the selected record. Return to the Master List and select it again.'); }
+  if (!record) {
+    report('QC organism not found. Open Entry from the QC Organism action in the Master List.');
+  } else {
+    const registeredAtcc = String(record.registration?.atcc || '').trim();
+    const baseName = String(record.name || '').trim();
+    const fullName = /\bATCC\s+\d+/i.test(baseName) || !registeredAtcc
+      ? baseName
+      : `${baseName} ${registeredAtcc}`;
+    document.getElementById('qc-name').textContent = fullName || 'Not specified';
+    document.getElementById('qc-id').textContent = record.id;
+    document.getElementById('qc-batch').textContent = record.registration?.batch || record.batch || '—';
+    fields.disabled = false;
+  }
+  // Retain the existing mockup's V1–V12 labels when no batch quantity is recorded.
+  const rawCount = record?.registration?.tubeCount || String(record?.tubes || '').split('/')[1];
+  const count = Number(rawCount);
+  const vialCount = Number.isSafeInteger(count) && count > 0 && count <= 10000 ? count : 12;
+  for (let n = 1; n <= vialCount; n++) form.elements.vial.add(new Option('V' + n, 'V' + n));
+  Object.keys(ENTRY_EXPECTED_RESULTS).forEach(test => form.elements.test.add(new Option(test, test)));
+  function updateExpected() {
+    const expected = form.elements.expected;
+    expected.replaceChildren(new Option(form.elements.test.value ? 'Select expected result' : 'Select identification test first', ''));
+    (ENTRY_EXPECTED_RESULTS[form.elements.test.value] || []).forEach(value => expected.add(new Option(value, value)));
+    expected.disabled = mode === 'weekly' || !form.elements.test.value;
+  }
+  form.elements.test.addEventListener('change', updateExpected);
+  function renderRows() {
+    const tbody = document.getElementById('entry-rows');
+    tbody.replaceChildren();
+    const columns = [...ENTRY_RESULT_COLUMNS[mode], ...ENTRY_AUDIT_COLUMNS];
+    const heading = document.getElementById('entry-results-head');
+    heading.replaceChildren(...columns.map(([, label]) => {
+      const th = document.createElement('th');
+      th.textContent = label;
+      return th;
+    }));
+    let rows;
+    try { rows = filterEntryRows(readEntryRows(localStorage, key), id, mode, document.getElementById('entry-status-filter').value); }
+    catch (e) { report('Saved results cannot be read. No existing data has been overwritten.'); return; }
+    document.getElementById('entry-count').textContent = rows.length + (rows.length === 1 ? ' record' : ' records');
+    if (!rows.length) {
+      const cell = tbody.insertRow().insertCell();
+      cell.colSpan = columns.length;
+      cell.className = 'entry-empty';
+      cell.textContent = document.getElementById('entry-status-filter').value === 'all' ? 'No records yet. Complete the form and select Save to add a result.' : 'No records match this status. Select All statuses to view the full list.';
+      return;
+    }
+    rows.forEach(row => {
+      const tr = tbody.insertRow();
+      columns.forEach(([keyName, , className]) => {
+        const rawValue = row[keyName];
+        const value = keyName.endsWith('At') ? formatEntryTimestamp(rawValue) : rawValue;
+        const td = tr.insertCell();
+        td.className = className;
+        if (keyName === 'performance' && value) {
+          const badge = document.createElement('span');
+          badge.className = 'entry-performance' + (value === 'Fail' ? ' is-fail' : '');
+          badge.textContent = value;
+          td.appendChild(badge);
+        } else if (['vial', 'passage', 'weeklyPassage', 'workingSlant', 'quantity'].includes(keyName) && value !== '' && value != null) {
+          const badge = document.createElement('span');
+          badge.className = 'entry-value-badge';
+          badge.textContent = String(value);
+          td.appendChild(badge);
+        } else td.textContent = value === '' || value == null ? '—' : String(value);
+      });
+    });
+  }
+  const actionModal = document.getElementById('entry-action-modal');
+  const actionRows = document.getElementById('entry-action-rows');
+  const checkAll = document.getElementById('entry-action-check-all');
+  function actionSelection() {
+    const checked = [...actionRows.querySelectorAll('[data-entry-select]:checked')];
+    document.getElementById('entry-action-selection').textContent = checked.length + ' selected';
+    const all = actionRows.querySelectorAll('[data-entry-select]');
+    checkAll.checked = Boolean(all.length) && checked.length === all.length;
+    checkAll.indeterminate = checked.length > 0 && checked.length < all.length;
+    return checked.map(input => input.value);
+  }
+  function openActionModal() {
+    let rows;
+    try { rows = filterPendingEndorsementRows(readEntryRows(localStorage, key), id, mode, document.getElementById('entry-status-filter').value); }
+    catch (e) { report('Unable to read saved records.'); return; }
+    actionRows.replaceChildren();
+    rows.forEach(row => {
+      const tr = actionRows.insertRow();
+      const checkCell = tr.insertCell();
+      checkCell.className = 'entry-check-column';
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox'; checkbox.value = row.id; checkbox.dataset.entrySelect = '';
+      checkbox.setAttribute('aria-label', 'Select ' + row.id);
+      checkbox.addEventListener('change', actionSelection);
+      checkCell.appendChild(checkbox);
+      [row.id, row.vial, row.test, row.expected].forEach(value => { tr.insertCell().textContent = value || '—'; });
+      const performanceCell = tr.insertCell();
+      if (row.performance) {
+        const badge = document.createElement('span');
+        badge.className = 'entry-performance' + (row.performance === 'Fail' ? ' is-fail' : '');
+        badge.textContent = row.performance;
+        performanceCell.appendChild(badge);
+      } else performanceCell.textContent = '—';
+    });
+    if (!rows.length) {
+      const cell = actionRows.insertRow().insertCell(); cell.colSpan = 6; cell.className = 'entry-action-empty'; cell.textContent = 'No records available for the current status filter.';
+    }
+    document.getElementById('entry-action-id-heading').textContent = mode === 'culture' ? 'Monthly QC ID' : mode === 'weekly' ? 'Weekly QC ID' : 'Subculture ID';
+    checkAll.checked = false; checkAll.indeterminate = false; checkAll.disabled = !rows.length;
+    document.getElementById('entry-action-selection').textContent = '0 selected';
+    actionModal.hidden = false;
+    document.getElementById('entry-action-close').focus();
+  }
+  function closeActionModal() { actionModal.hidden = true; }
+  document.getElementById('entry-list-action').addEventListener('click', openActionModal);
+  document.getElementById('entry-action-close').addEventListener('click', closeActionModal);
+  actionModal.addEventListener('click', event => { if (event.target === actionModal) closeActionModal(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape' && !actionModal.hidden) closeActionModal(); });
+  checkAll.addEventListener('change', () => { actionRows.querySelectorAll('[data-entry-select]').forEach(input => { input.checked = checkAll.checked; }); actionSelection(); });
+  actionModal.querySelectorAll('[data-bulk-action]').forEach(button => button.addEventListener('click', () => {
+    const selectedIds = actionSelection();
+    if (!selectedIds.length) { notify('Select at least one record.'); return; }
+    const action = button.dataset.bulkAction;
+    try {
+      const rows = readEntryRows(localStorage, key);
+      const selectedSet = new Set(selectedIds);
+      const scopedIds = rows.filter(row => row.recordId === id && row.mode === mode && selectedSet.has(row.id)).map(row => row.id);
+      const updated = applyEntryActionToRows(rows, scopedIds, action);
+      localStorage.setItem(key, JSON.stringify(updated));
+      error.hidden = true;
+      closeActionModal();
+      renderRows();
+      notify(scopedIds.length + ' record' + (scopedIds.length === 1 ? '' : 's') + ' successfully ' + action + ' by Admin.');
+    } catch (e) { report('Unable to update the selected records. Please try again.'); }
+  }));
+  document.getElementById('entry-status-filter').addEventListener('change', renderRows);
+  document.getElementById('entry-export').addEventListener('click', () => {
+    if (!record) { report('Select a QC organism before downloading.'); return; }
+    try {
+      const rows = filterEntryRows(readEntryRows(localStorage, key), id, mode, document.getElementById('entry-status-filter').value);
+      if (!rows.length) { notify('No saved records to download.'); return; }
+      const bytes = buildEntryWorkbook(record, rows, mode);
+      const url = URL.createObjectURL(new Blob([bytes], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = (record.id + '-' + mode + '-list.xlsx').replace(/[^a-zA-Z0-9._-]/g, '_');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+      notify('Excel download started · ' + rows.length + ' records');
+    } catch (e) { report('Unable to export the list. Please try again.'); }
+  });
+  const tabs = [...document.querySelectorAll('[data-mode]')];
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => {
+      mode = tab.dataset.mode;
+      tabs.forEach(item => { item.setAttribute('aria-selected', String(item === tab)); item.tabIndex = item === tab ? 0 : -1; });
+      document.getElementById('entry-panel').setAttribute('aria-labelledby', tab.id);
+      document.getElementById('results-title').textContent = tab.textContent;
+      const passageLabel = mode === 'culture' ? 'Passage (Monthly)' : mode === 'weekly' ? 'Passage Working' : 'Passage (Working)';
+      document.getElementById('entry-passage-label').firstChild.textContent = passageLabel + ' ';
+      const sourceGroup = document.querySelector('.entry-field-group-source');
+      const sourceGrid = document.getElementById('entry-source-group-grid');
+      const preparedGroup = document.querySelector('.entry-field-group-prepared');
+      const preparedGrid = document.getElementById('entry-prepared-group-grid');
+      const sourceField = document.querySelector('[data-source-field]');
+      const passageField = document.querySelector('[data-passage-field]');
+      const weeklyPassageField = document.querySelector('[data-weekly-passage-field]');
+      const preparedField = document.querySelector('[data-prepared-field]');
+      const usesWorkingSourceLayout = mode === 'subculture' || mode === 'weekly';
+      sourceGroup.classList.toggle('is-working', usesWorkingSourceLayout);
+      sourceGroup.classList.toggle('is-weekly', mode === 'weekly');
+      document.getElementById('entry-prepared-label').firstChild.textContent = (usesWorkingSourceLayout ? 'Number of Working Culture (Slant)' : 'Number of Working Culture Prepared (Slant)') + ' ';
+      if (mode === 'weekly') sourceGrid.append(sourceField, preparedField, passageField, weeklyPassageField);
+      else if (mode === 'subculture') sourceGrid.append(sourceField, preparedField, passageField);
+      else {
+        sourceGrid.append(passageField, sourceField);
+        preparedGrid.prepend(preparedField);
+      }
+      weeklyPassageField.hidden = mode !== 'weekly';
+      weeklyPassageField.querySelector('select').disabled = mode !== 'weekly';
+      preparedGroup.hidden = mode !== 'culture';
+      document.getElementById('entry-group-test').lastChild.textContent = mode === 'weekly' ? 'Subculture Preparation' : 'Identification test';
+      document.getElementById('entry-group-test-number').textContent = mode === 'culture' ? '03' : '02';
+      document.getElementById('entry-group-prepared-number').textContent = mode === 'culture' ? '04' : '03';
+      const usesMedia = mode === 'weekly';
+      document.getElementById('entry-lot-label').firstChild.textContent = usesMedia ? 'Media Lot Number ' : 'Kit Lot Number ';
+      document.getElementById('entry-expiry-label').firstChild.textContent = usesMedia ? 'Media Expiry Date ' : 'Kit Expiry Date ';
+      form.elements.lot.placeholder = usesMedia ? 'Enter media lot number' : 'Enter kit lot number';
+      document.querySelectorAll('[data-identification-field]').forEach(label => {
+        label.hidden = mode === 'weekly';
+        label.querySelector('select').disabled = mode === 'weekly';
+      });
+      const monthlyConfirmation = document.querySelector('[data-monthly-confirmation]');
+      monthlyConfirmation.hidden = mode !== 'culture';
+      monthlyConfirmation.querySelectorAll('input, select').forEach(field => { field.disabled = mode !== 'culture'; });
+      const weeklyMediaField = document.querySelector('[data-weekly-media-field]');
+      weeklyMediaField.hidden = mode !== 'weekly';
+      weeklyMediaField.querySelector('select').disabled = mode !== 'weekly';
+      const statusField = document.querySelector('[data-status-field]');
+      statusField.hidden = mode === 'weekly';
+      statusField.querySelector('select').disabled = mode === 'weekly';
+      document.querySelectorAll('[data-culture-field]').forEach(label => {
+        label.hidden = mode === 'subculture';
+        label.querySelector('input, select').disabled = mode === 'subculture';
+      });
+      preparedField.hidden = false;
+      preparedField.querySelector('input').disabled = false;
+      document.querySelectorAll('[data-weekly-field]').forEach(label => {
+        label.hidden = mode !== 'weekly';
+        label.querySelector('input').disabled = mode !== 'weekly';
+      });
+      updateExpected();
+      renderRows();
+    });
+    tab.addEventListener('keydown', event => {
+      const target = event.key === 'ArrowRight' ? (index + 1) % tabs.length :
+        event.key === 'ArrowLeft' ? (index + tabs.length - 1) % tabs.length :
+        event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : -1;
+      if (target >= 0) { event.preventDefault(); tabs[target].focus(); tabs[target].click(); }
+    });
+  });
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (!record || !form.reportValidity()) return;
+    try {
+      const rows = readEntryRows(localStorage, key);
+      const data = Object.fromEntries(new FormData(form));
+      const row = createEntryRow(record.id, mode, data, rows);
+      localStorage.setItem(key, JSON.stringify([...rows, row]));
+      error.hidden = true;
+      renderRows();
+      form.reset();
+      updateExpected();
+      notify('Successfully saved · ' + row.id);
+    } catch (e) {
+      report('Unable to save this entry. Check the fields and browser storage. Your input has been kept.');
+    }
+  });
+  renderRows();
+}
+
+if (typeof module !== 'undefined' && module.exports) module.exports = { ENTRY_EXPECTED_RESULTS, readEntryRows, createEntryRow, performEntryRow, applyEntryAction, applyEntryActionToRows, filterEntryRows, filterPendingEndorsementRows };
+if (typeof document !== 'undefined') document.addEventListener('DOMContentLoaded', initEntry);

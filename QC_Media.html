@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>QC Media · Microbiology LIS</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="shell-overrides.css">
+  <link rel="stylesheet" href="QC_Media.css">
+</head>
+<body class="qc-media-screen">
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Primary navigation">
+      <div class="brand-lockup"><div class="brand-mark" aria-hidden="true">MC</div><div><div class="brand-title">Microbiology</div><div class="brand-subtitle">Laboratory information system</div></div></div>
+      <div class="workspace-picker"><span class="eyebrow">Current workspace</span><strong>Quality control</strong><span class="workspace-status"><span class="status-dot"></span> Live mockup data</span></div>
+      <nav class="sidebar-nav"></nav>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div class="breadcrumbs"><span>Microbiology</span><span class="crumb-separator">/</span><strong id="breadcrumb-current">QC Media</strong></div><div class="topbar-actions"></div></header>
+      <div class="page-container qc-media-page">
+        <div class="media-heading"><div><span class="eyebrow accent-eyebrow">Culture media quality control</span><h1>QC Media</h1><p>Receive, verify, release and monitor microbiology media with complete traceability.</p></div><button class="button button-primary" type="button" id="add-media">＋ Register QC Media</button></div>
+
+        <section class="media-metrics" aria-label="QC Media summary">
+          <article><span>Active media lots</span><strong>18</strong><small>Available for laboratory use</small></article>
+          <article><span>Pending QC</span><strong>3</strong><small>Awaiting verification</small></article>
+          <article><span>On hold / failed</span><strong>2</strong><small>Investigation required</small></article>
+          <article><span>Expiring soon</span><strong>4</strong><small>Within the next 30 days</small></article>
+        </section>
+
+        <section class="card media-flow-card">
+          <div class="media-section-heading"><div><span class="eyebrow">End-to-end workflow</span><h2>QC Media process flow</h2></div><span class="media-flow-note">Select a step to view its purpose</span></div>
+          <div class="media-flow" id="media-flow">
+            <button type="button" class="is-active" data-step="Receive supplier/source details, media name, manufacturer, lot number, quantity and received date."><b>1</b><span>Receive Media</span><small>Delivery &amp; condition</small></button>
+            <i>→</i><button type="button" data-step="Create a unique Media QC ID and register the manufacturer, media type, lot and expiry date."><b>2</b><span>Register &amp; Assign ID</span><small>Master record</small></button>
+            <i>→</i><button type="button" data-step="Record sterility, growth-promotion, physical appearance and performance checks."><b>3</b><span>Incoming QC</span><small>Test &amp; verify</small></button>
+            <i>→</i><button type="button" data-step="A reviewer records the final decision: release, hold or reject the media lot."><b>4</b><span>QC Decision</span><small>Release / hold / reject</small></button>
+            <i>→</i><button type="button" data-step="Released media is assigned to a storage location and made available for laboratory use."><b>5</b><span>Release for Use</span><small>Storage &amp; availability</small></button>
+            <i>→</i><button type="button" data-step="Monitor opened packs, remaining quantity, expiry, routine QC and any nonconformance."><b>6</b><span>Routine Monitoring</span><small>Usage &amp; ongoing QC</small></button>
+            <i>→</i><button type="button" data-step="Capture disposal date, reason, responsible person and archive retention information."><b>7</b><span>Disposal &amp; Archive</span><small>Close the lifecycle</small></button>
+          </div>
+          <div class="media-flow-detail" id="media-flow-detail">Receive supplier/source details, media name, manufacturer, lot number, quantity and received date.</div>
+        </section>
+
+        <section class="media-module-grid">
+          <article class="card"><span class="module-number">01</span><h3>Media Master</h3><p>Media QC ID, media name/type, manufacturer, lot number, expiry date and current status.</p></article>
+          <article class="card"><span class="module-number">02</span><h3>Receiving Record</h3><p>Received date, package condition, quantity, certificate reference and receiving personnel.</p></article>
+          <article class="card"><span class="module-number">03</span><h3>QC Test Record</h3><p>Sterility, growth promotion, physical appearance, expected result and pass/fail decision.</p></article>
+          <article class="card"><span class="module-number">04</span><h3>Release &amp; Storage</h3><p>Approval, release status, storage location, opened date and use-by date.</p></article>
+          <article class="card"><span class="module-number">05</span><h3>Nonconformance / CAPA</h3><p>Failed step, investigation, immediate action, CAPA and closure status.</p></article>
+          <article class="card"><span class="module-number">06</span><h3>Disposal / Archive</h3><p>Disposal date, reason, quantity disposed, responsible person and record retention.</p></article>
+        </section>
+
+        <section class="card media-register-card">
+          <div class="media-section-heading"><div><span class="eyebrow">Core data table</span><h2>QC Media Master List</h2></div><span class="count-badge" id="media-count">6 records</span></div>
+          <div class="media-toolbar"><label><span>Search</span><input id="media-search" placeholder="Search media, ID or lot number"></label><label><span>Status</span><select id="media-status"><option value="all">All statuses</option><option>Released</option><option>Pending QC</option><option>On hold</option><option>Rejected</option></select></label></div>
+          <div class="media-table-scroll"><table><thead><tr><th>Media QC ID</th><th>Media name</th><th>Manufacturer</th><th>Lot number</th><th>Date received</th><th>Checked by</th><th>Checked date</th><th>Status</th><th>Action</th></tr></thead><tbody id="media-rows"></tbody></table></div>
+        </section>
+      </div>
+      <footer class="media-footer">Copyright © 2026 LIS STRATEQ. All rights reserved.<span>Local mockup · QC Media</span></footer>
+    </main>
+  </div>
+  <div class="media-toast" id="media-toast" hidden>QC Media registration form will be added in the next step.</div>
+  <script src="shell-overrides.js"></script>
+  <script src="QC_Media-data.js"></script>
+  <script src="QC_Media.js"></script>
+</body>
+</html>
